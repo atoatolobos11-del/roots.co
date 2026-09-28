@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga34" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#EDEBE5"/>
+      <stop offset="1" stop-color="#DAD6CD"/>
+    </linearGradient>
+    <radialGradient id="lita34" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba34" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#B5AF9F"/>
+      <stop offset="1" stop-color="#A9A396"/>
+    </linearGradient>
+    <filter id="graina34" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="480" height="480" fill="url(#bga34)"/>
+  <rect width="480" height="480" fill="url(#lita34)"/>
+  <g transform="translate(240 246) scale(0.44) translate(-400 -520)">
+    <ellipse cx="400" cy="890" rx="190" ry="28" fill="#111111" opacity="0.16"/>
+    <path fill="#A9A396" d="M352 240c0-24 20-40 48-40s48 16 48 40c22 6 62 16 80 34 30 30 44 84 52 142l26 208c8 40-22 60-46 44l-46-34v304c0 18-14 28-34 28H320c-20 0-34-10-34-28V584l-46 34c-24 16-54-4-46-44l26-208c8-58 22-112 52-142 18-18 58-28 80-34Z"/>
+    <path fill="#B5AF9F" opacity="0.5" d="M352 240c0-24 20-40 48-40 10 0 19 2 28 6-17 9-28 20-29 34-2 22 14 42 38 50-7 2-14 2-22 2-30 0-48-16-48-40z"/>
+    <path fill="none" stroke="#B5AF9F" stroke-width="3.5" opacity="0.6" d="M400 280v618"/>
+    <rect x="300" y="546" width="200" height="26" fill="#B5AF9F" opacity="0.7"/>
+    <g fill="#B5AF9F" opacity="0.9"><circle cx="400" cy="559" r="9"/></g></g>
+  <rect width="480" height="480" filter="url(#graina34)" opacity="0.055"/></g></svg>

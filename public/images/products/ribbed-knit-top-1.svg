@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga1" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F2F0EB"/>
+      <stop offset="1" stop-color="#E2DFD7"/>
+    </linearGradient>
+    <radialGradient id="lita1" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba1" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#3E3E3B"/>
+      <stop offset="1" stop-color="#2C2C2A"/>
+    </linearGradient>
+    <filter id="graina1" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga1)"/>
+  <rect width="800" height="1000" fill="url(#lita1)"/>
+  
+    <ellipse cx="400" cy="748" rx="168" ry="26" fill="#111111" opacity="0.16"/>
+    <path fill="#2C2C2A" d="M352 232c0-24 22-40 48-40s48 16 48 40c16 5 52 12 70 24 30 20 46 66 54 114l24 152c8 36-18 54-38 42l-36-24v166c0 18-14 30-32 30H304c-18 0-32-12-32-30V540l-36 24c-20 12-46-6-38-42l24-152c8-48 24-94 54-114 18-12 54-19 70-24Z"/>
+    <path fill="#3E3E3B" opacity="0.5" d="M352 232c0-24 22-40 48-40 10 0 19 2 27 6-14 8-23 20-23 34 0 18 10 34 26 44-6 2-12 3-18 3-26 0-48-16-48-40z"/>
+    <g stroke="#3E3E3B" stroke-width="3" opacity="0.55" fill="none">
+      <path d="M300 470h200"/><path d="M300 492h200"/><path d="M300 514h200"/><path d="M300 536h200"/><path d="M300 558h200"/><path d="M300 580h200"/><path d="M300 602h200"/>
+    </g>
+    <path fill="none" stroke="#3E3E3B" stroke-width="4" opacity="0.5" d="M272 660h256"/>
+  <rect width="800" height="1000" filter="url(#graina1)" opacity="0.055"/></g></svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga20" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#D3CFC5"/>
+      <stop offset="1" stop-color="#BEB9AE"/>
+    </linearGradient>
+    <radialGradient id="lita20" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba20" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#3E3E3B"/>
+      <stop offset="1" stop-color="#2C2C2A"/>
+    </linearGradient>
+    <filter id="graina20" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga20)"/>
+  <rect width="800" height="1000" fill="url(#lita20)"/>
+  
+    <ellipse cx="400" cy="720" rx="150" ry="22" fill="#111111" opacity="0.16"/>
+    <path fill="none" stroke="#2C2C2A" stroke-width="14" d="M252 340h296" transform="rotate(-18 400 340)"/>
+    <path fill="#2C2C2A" d="M262 420h276c12 0 22 10 22 22v220c0 26-20 46-46 46H286c-26 0-46-20-46-46V442c0-12 10-22 22-22z"/>
+    <path fill="#3E3E3B" opacity="0.5" d="M262 420h276c12 0 22 10 22 22v54H240v-54c0-12 10-22 22-22z"/>
+    <path fill="#3E3E3B" d="M240 492h320v24H240z"/>
+    <rect x="366" y="520" width="68" height="46" rx="8" fill="#3E3E3B" opacity="0.85"/>
+  <rect width="800" height="1000" filter="url(#graina20)" opacity="0.055"/></g></svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga4" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#D3CFC5"/>
+      <stop offset="1" stop-color="#BEB9AE"/>
+    </linearGradient>
+    <radialGradient id="lita4" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba4" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#F6F2EC"/>
+      <stop offset="1" stop-color="#EFE9E1"/>
+    </linearGradient>
+    <filter id="graina4" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga4)"/>
+  <rect width="800" height="1000" fill="url(#lita4)"/>
+  
+    <ellipse cx="400" cy="858" rx="158" ry="24" fill="#111111" opacity="0.16"/>
+    <path fill="#EFE9E1" d="M320 266c44-12 116-12 160 0l8 244 22 336h-92l-20-276-20 276h-92l22-336z"/>
+    <path fill="#F6F2EC" opacity="0.5" d="M320 266c44-12 116-12 160 0l3 58c-44-10-122-10-166 0z"/>
+    <g fill="none" stroke="#F6F2EC" stroke-width="2.5" opacity="0.5">
+      <path d="M400 336v500M336 290h128"/>
+      <path d="M296 470h66M438 470h66M300 560h62M438 560h62"/>
+    </g>
+    <circle cx="400" cy="322" r="5" fill="#F6F2EC"/>
+  <rect width="800" height="1000" filter="url(#graina4)" opacity="0.055"/></g></svg>

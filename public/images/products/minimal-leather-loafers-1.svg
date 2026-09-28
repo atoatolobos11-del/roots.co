@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga17" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F2F0EB"/>
+      <stop offset="1" stop-color="#E2DFD7"/>
+    </linearGradient>
+    <radialGradient id="lita17" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba17" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#B5AF9F"/>
+      <stop offset="1" stop-color="#A9A396"/>
+    </linearGradient>
+    <filter id="graina17" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga17)"/>
+  <rect width="800" height="1000" fill="url(#lita17)"/>
+  
+    <ellipse cx="410" cy="700" rx="232" ry="24" fill="#111111" opacity="0.16"/>
+    <path fill="#A9A396" d="M196 520c0-30 18-46 46-52l86-20c34-8 58 4 76 26l40 46c34 26 82 34 132 38 50 4 76 22 78 50 2 34-28 52-76 52H232c-24 0-36-14-36-40z"/>
+    <path fill="#B5AF9F" d="M198 620h452c-4 24-30 40-72 40H232c-24 0-34-16-34-40z"/>
+    <path fill="#B5AF9F" opacity="0.55" d="M330 500c30-8 52 2 70 24l26 34-72 12c-30-6-44-22-40-42 3-13 8-22 16-28z"/>
+    <path fill="none" stroke="#B5AF9F" stroke-width="7" opacity="0.9" d="M330 546h104"/>
+    <g fill="none" stroke="#B5AF9F" stroke-width="3" opacity="0.45"><path d="M430 596h190M250 596h100"/></g>
+  <rect width="800" height="1000" filter="url(#graina17)" opacity="0.055"/></g></svg>

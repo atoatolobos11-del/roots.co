@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga23" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F6F5F2"/>
+      <stop offset="1" stop-color="#E8E6E1"/>
+    </linearGradient>
+    <radialGradient id="lita23" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba23" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#8B6A53"/>
+      <stop offset="1" stop-color="#7A5C48"/>
+    </linearGradient>
+    <filter id="graina23" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga23)"/>
+  <rect width="800" height="1000" fill="url(#lita23)"/>
+  
+    <ellipse cx="400" cy="848" rx="186" ry="26" fill="#111111" opacity="0.16"/>
+    <path fill="#7A5C48" d="M330 262c42-12 98-12 140 0l10 96 68 470c4 24-14 40-38 40H290c-24 0-42-16-38-40l68-470z"/>
+    <path fill="#8B6A53" opacity="0.5" d="M330 262c42-12 98-12 140 0l3 56c-44-10-102-10-146 0z"/>
+    <g fill="none" stroke="#8B6A53" stroke-width="2.5" opacity="0.42">
+      <path d="M312 400l-24 430M360 400l-10 434M440 400l10 434M488 400l24 430"/><path d="M316 400l-24 430M365 400l-10 434M435 400l10 434M484 400l24 430"/><path d="M320 400l-24 430M370 400l-10 434M430 400l10 434M480 400l24 430"/><path d="M324 400l-24 430M375 400l-10 434M425 400l10 434M476 400l24 430"/><path d="M328 400l-24 430M380 400l-10 434M420 400l10 434M472 400l24 430"/><path d="M332 400l-24 430M385 400l-10 434M415 400l10 434M468 400l24 430"/>
+    </g>
+  <rect width="800" height="1000" filter="url(#graina23)" opacity="0.055"/></g></svg>

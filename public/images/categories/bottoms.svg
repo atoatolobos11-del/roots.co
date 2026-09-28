@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga30" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#F2F0EB"/>
+      <stop offset="1" stop-color="#E2DFD7"/>
+    </linearGradient>
+    <radialGradient id="lita30" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba30" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#585855"/>
+      <stop offset="1" stop-color="#4A4A48"/>
+    </linearGradient>
+    <filter id="graina30" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="480" height="480" fill="url(#bga30)"/>
+  <rect width="480" height="480" fill="url(#lita30)"/>
+  <g transform="translate(240 246) scale(0.44) translate(-400 -520)">
+    <ellipse cx="400" cy="862" rx="168" ry="24" fill="#111111" opacity="0.16"/>
+    <path fill="#4A4A48" d="M316 262c46-14 122-14 168 0l10 250 24 344h-96l-24-282-22 282h-96l24-344z"/>
+    <path fill="#585855" opacity="0.5" d="M316 262c46-14 122-14 168 0l4 60c-46-12-126-12-176 0z"/>
+    <path fill="none" stroke="#585855" stroke-width="3" opacity="0.5" d="M400 330v520"/>
+    <path fill="none" stroke="#585855" stroke-width="2.5" opacity="0.4" d="M336 296h128M300 300v22M500 300v22"/></g>
+  <rect width="480" height="480" filter="url(#graina30)" opacity="0.055"/></g></svg>

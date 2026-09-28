@@ -1,0 +1,17 @@
+# C-STYLE portfolio — local production build with Docker.
+#
+#   docker compose up --build
+#   open http://localhost:8080
+#
+# Vercel ignores this file: it builds with `npm run build` and serves `dist`.
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: c-style-portfolio:latest
+    container_name: c-style-portfolio
+    ports:
+      - "8080:80"
+    restart: unless-stopped

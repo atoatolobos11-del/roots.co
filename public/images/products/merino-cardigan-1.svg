@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga21" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#DEDAD1"/>
+      <stop offset="1" stop-color="#C9C5BA"/>
+    </linearGradient>
+    <radialGradient id="lita21" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba21" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#D5CEBF"/>
+      <stop offset="1" stop-color="#C9C2B4"/>
+    </linearGradient>
+    <filter id="graina21" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="800" height="1000" fill="url(#bga21)"/>
+  <rect width="800" height="1000" fill="url(#lita21)"/>
+  
+    <ellipse cx="400" cy="806" rx="168" ry="26" fill="#111111" opacity="0.16"/>
+    <path fill="#C9C2B4" d="M354 236c0-24 20-38 46-38s46 14 46 38c18 6 54 14 72 28 30 24 44 72 52 122l24 148c8 34-18 52-38 40l-34-22v250c0 18-14 28-34 28H308c-20 0-34-10-34-28V552l-34 22c-20 12-46-6-38-40l24-148c8-50 22-98 52-122 18-14 54-22 72-28Z"/>
+    <path fill="#D5CEBF" opacity="0.5" d="M354 236c0-24 20-38 46-38 9 0 17 2 25 6-14 9-24 20-25 32-2 22 14 42 36 50-8 1-16 0-24-2-26 0-46-14-46-38z"/>
+    <g fill="none" stroke="#D5CEBF" stroke-width="2.5" opacity="0.55">
+      <path d="M300 500h200"/><path d="M300 526h200"/><path d="M300 552h200"/><path d="M300 578h200"/><path d="M300 604h200"/><path d="M300 630h200"/><path d="M300 656h200"/><path d="M300 682h200"/><path d="M300 708h200"/>
+      <path d="M262 480h44M494 480h44"/><path d="M262 520h44M494 520h44"/><path d="M262 560h44M494 560h44"/><path d="M262 600h44M494 600h44"/>
+    </g>
+    <path fill="none" stroke="#D5CEBF" stroke-width="3" opacity="0.6" d="M400 300v506"/>
+  <rect width="800" height="1000" filter="url(#graina21)" opacity="0.055"/></g></svg>

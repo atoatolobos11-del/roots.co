@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" preserveAspectRatio="xMidYMid slice" role="img"><defs>
+    <linearGradient id="bga35" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#222222"/>
+      <stop offset="1" stop-color="#111111"/>
+    </linearGradient>
+    <radialGradient id="lita35" cx="0.5" cy="0.34" r="0.78">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    </radialGradient>
+    <linearGradient id="faba35" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#4A4A48"/>
+      <stop offset="1" stop-color="#3A3A38"/>
+    </linearGradient>
+    <filter id="graina35" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+    </filter>
+  </defs><g id="art"><rect width="480" height="480" fill="url(#bga35)"/>
+  <rect width="480" height="480" fill="url(#lita35)"/>
+  <g fill="none" stroke="#DCDCD8" stroke-width="6" opacity="0.5">
+      <path d="M40 40h90v90H40z"/>
+    </g>
+    <text x="240" y="212" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="600" letter-spacing="4" fill="#F7F7F5">−50%</text>
+    <rect x="150" y="258" width="180" height="2" fill="#DCDCD8" opacity="0.6"/>
+    <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DCDCD8" opacity="0.85">SALE</text>
+  <rect width="480" height="480" filter="url(#graina35)" opacity="0.055"/></g></svg>
