@@ -1,5 +1,5 @@
 /**
- * Original demo catalogue for the C-STYLE portfolio build.
+ * Original demo catalogue for the ROOT.CO portfolio build.
  * All names, copy and imagery are fictional and generated for this project.
  */
 

@@ -9,7 +9,7 @@ export default function EditorialBand() {
     <section aria-labelledby="editorial-title" className="shell py-12 sm:py-14 lg:py-20">
       <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
         <div>
-          <p className="label">The C-STYLE standard</p>
+          <p className="label">The ROOT.CO standard</p>
           <h2
             id="editorial-title"
             className="mt-4 text-[28px] font-semibold uppercase leading-[1.02] tracking-[-0.02em] sm:text-[36px] lg:text-[44px]"

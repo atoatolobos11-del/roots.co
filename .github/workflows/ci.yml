@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref to save runner minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, build and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npx oxlint --deny-warnings src scripts
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke test
+        run: npm run test:smoke
+
+      - name: Verify the production URL is stamped
+        # index.html, robots.txt and sitemap.xml must all agree on the host,
+        # otherwise search engines index a placeholder domain. Run
+        # `npm run set:url -- <your-url>` to fix.
+        run: node scripts/check-site-url.mjs --strict
+
+      - name: Upload the production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7

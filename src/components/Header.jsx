@@ -45,7 +45,7 @@ export default function Header() {
                   window.scrollTo({ top: 0, behavior: 'smooth' })
                 }}
                 className="px-1 py-2"
-                aria-label="C-STYLE — back to top"
+                aria-label="ROOT.CO — back to top"
               >
                 <Wordmark />
               </a>

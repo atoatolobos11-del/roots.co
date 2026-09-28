@@ -45,7 +45,7 @@ export default function ChatWidget() {
       {/* Chat card */}
       <div
         role="dialog"
-        aria-label="C-STYLE support chat"
+        aria-label="ROOT.CO support chat"
         aria-hidden={!isOpen}
         className={cn(
           'pointer-events-auto w-[min(19rem,calc(100vw-2rem))] origin-bottom-right overflow-hidden border border-line bg-white shadow-lg',
@@ -60,7 +60,7 @@ export default function ChatWidget() {
             </span>
             <span>
               <span className="block text-[11px] font-semibold uppercase tracking-label">
-                C-STYLE Support
+                ROOT.CO Support
               </span>
               <span className="mt-0.5 block text-[10px] text-white/60">{supportHours}</span>
             </span>
@@ -119,11 +119,11 @@ export default function ChatWidget() {
             ))}
           </ul>
           <a
-            href="mailto:support@c-style.example.com"
+            href="mailto:support@root.co"
             className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-label text-ash transition-colors duration-200 hover:text-ink"
           >
             <Send size={12} strokeWidth={1.5} aria-hidden="true" />
-            support@c-style.example.com
+            support@root.co
           </a>
         </div>
       </div>

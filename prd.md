@@ -1,4 +1,4 @@
-# C-STYLE — Fashion E-Commerce Portfolio
+# ROOT.CO — Fashion E-Commerce Portfolio
 
 > Project requirement document. Implementation notes live in `README.md`.
 
@@ -6,9 +6,9 @@
 
 | | |
 | --- | --- |
-| **Project name** | C-STYLE |
+| **Project name** | ROOT.CO |
 | **Type** | Responsive fashion e-commerce portfolio website |
-| **Purpose** | Recreate the UI structure, layout, spacing, typography hierarchy, product presentation and overall visual experience of a C-STYLE reference design as an original portfolio project |
+| **Purpose** | Recreate the UI structure, layout, spacing, typography hierarchy, product presentation and overall visual experience of a ROOT.CO reference design as an original portfolio project |
 | **Deployment** | Vercel |
 | **Version control** | Git + GitHub |
 | **Containerization** | Docker |
@@ -67,7 +67,7 @@ Very thin black bar at the very top. Black background, small white uppercase cen
 
 ### 4.2 Main Navigation
 
-- **Left** — minimalist `C-STYLE` wordmark.
+- **Left** — minimalist `ROOT.CO` wordmark.
 - **Centre (desktop)** — NEW IN, WOMEN, MEN, SHOES, ACCESSORIES, SALE.
 - **Right** — search, account, wishlist and shopping bag, using Lucide icons.
 - **Desktop** — full horizontal nav, centred menu, utility icons right.
@@ -269,7 +269,7 @@ must not complicate the Vercel deployment.
 ```bash
 git init
 git add .
-git commit -m "Initial C-STYLE portfolio"
+git commit -m "Initial ROOT.CO portfolio"
 git branch -M main
 git remote add origin YOUR_GITHUB_REPOSITORY
 git push -u origin main
@@ -305,13 +305,13 @@ contrast.
 
 ## 32. SEO Basics
 
-Page title `C-STYLE — Modern Fashion & Everyday Essentials`, meta description, Open Graph
+Page title `ROOT.CO — Modern Fashion & Everyday Essentials`, meta description, Open Graph
 metadata, descriptive image alt text and semantic headings.
 
 ## 33. Suggested Folder Structure
 
 ```
-c-style-portfolio/
+root-co/
 ├── public/images/
 ├── src/{assets,components,context,data,pages}/
 ├── src/{App.jsx,main.jsx,index.css}
@@ -365,7 +365,7 @@ c-style-portfolio/
 
 ## 36. Portfolio Presentation
 
-**C-STYLE — Modern Fashion E-Commerce UI.** A responsive fashion e-commerce interface built with
+**ROOT.CO — Modern Fashion E-Commerce UI.** A responsive fashion e-commerce interface built with
 React and Tailwind CSS, featuring reusable product components, category filtering, wishlist and
 cart interactions, responsive navigation and a premium editorial shopping experience.
 
@@ -383,7 +383,7 @@ match the composition:
 ```
 BLACK ANNOUNCEMENT BAR
         ↓
-C-STYLE NAVIGATION
+ROOT.CO NAVIGATION
         ↓
 LARGE FASHION HERO
         ↓

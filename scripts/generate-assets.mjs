@@ -1,5 +1,5 @@
 /**
- * C-STYLE — original asset generator
+ * ROOT.CO — original asset generator
  * ------------------------------------------------------------------
  * Every image shipped with this portfolio is generated here as original
  * vector artwork (SVG) so the project contains zero third-party or
@@ -8,10 +8,10 @@
  *   npm run generate:assets
  *
  * Art direction: flat tonal "lookbook" illustration on neutral studio
- * backgrounds — minimalist, editorial, on-brand with the C-STYLE palette.
+ * backgrounds — minimalist, editorial, on-brand with the ROOT.CO palette.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { deflateSync } from 'node:zlib'
@@ -74,8 +74,6 @@ function writePng(file, width, height, rgba) {
 /* Palette                                                             */
 /* ------------------------------------------------------------------ */
 
-const SKIN = ['#E8CBB2', '#D8B294', '#B98D6C', '#8E6547']
-const HAIR = ['#241E1B', '#3A2C24', '#151312', '#4A3A2C']
 const CLOTH = [
   ['#2C2C2A', '#3E3E3B'],
   ['#8C8C7A', '#9C9C89'],
@@ -102,6 +100,8 @@ const BACKDROPS = [
   ['#E4E1D9', '#D0CCC2'],
   ['#EDEBE5', '#DAD6CD'],
 ]
+/** Backdrop for cards that need to read as a dark, editorial treatment. */
+const DARK_BACKDROP = ['#3A3A38', '#141413']
 
 /* ------------------------------------------------------------------ */
 /* SVG helpers                                                         */
@@ -109,21 +109,44 @@ const BACKDROPS = [
 
 let uid = 0
 
+/** Lighting values for a card, normal or dark. */
+const LIGHT = {
+  light: { keyInk: '#ffffff', keyTop: 0.5, keyMid: 0.1, vigInk: '#111111', vigMax: 0.09 },
+  dark: { keyInk: '#ffffff', keyTop: 0.14, keyMid: 0.03, vigInk: '#000000', vigMax: 0.55 },
+}
+
 function doc(w, h, inner) {
   uid += 1
   const id = `a${uid}`
+  const L = inner.dark ? LIGHT.dark : LIGHT.light
   const defs = `<defs>
     <linearGradient id="bg${id}" x1="0" y1="0" x2="0.35" y2="1">
       <stop offset="0" stop-color="${inner.bg[0]}"/>
       <stop offset="1" stop-color="${inner.bg[1]}"/>
     </linearGradient>
-    <radialGradient id="lit${id}" cx="0.5" cy="0.34" r="0.78">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
-      <stop offset="0.62" stop-color="#ffffff" stop-opacity="0.06"/>
-      <stop offset="1" stop-color="#111111" stop-opacity="0.14"/>
+    <!-- Soft light from above. A centred radial highlight read as a visible
+         white blob on flat product backgrounds, so the key light is a vertical
+         wash and the only radial term is a wide, very soft corner vignette.
+         A dark card inverts the lighting so the backdrop recedes. -->
+    <linearGradient id="key${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${L.keyInk}" stop-opacity="${L.keyTop}"/>
+      <stop offset="0.45" stop-color="${L.keyInk}" stop-opacity="${L.keyMid}"/>
+      <stop offset="1" stop-color="${L.keyInk}" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="vig${id}" cx="0.5" cy="0.42" r="0.78">
+      <stop offset="0.55" stop-color="${L.vigInk}" stop-opacity="0"/>
+      <stop offset="1" stop-color="${L.vigInk}" stop-opacity="${L.vigMax}"/>
     </radialGradient>
-    <linearGradient id="fab${id}" x1="0.2" y1="0" x2="0.8" y2="1">
+    <linearGradient id="fab${id}" x1="0.12" y1="0" x2="0.88" y2="1">
       <stop offset="0" stop-color="${inner.cloth[1]}"/>
+      <stop offset="0.55" stop-color="${inner.cloth[0]}"/>
+      <stop offset="1" stop-color="${inner.cloth[0]}"/>
+    </linearGradient>
+    <!-- Figures live in a 300-wide local space, so they need their own gradient
+         keyed to the figure clip id rather than the 800-wide product one. -->
+    <linearGradient id="figFIG" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="${inner.cloth[1]}"/>
+      <stop offset="0.6" stop-color="${inner.cloth[0]}"/>
       <stop offset="1" stop-color="${inner.cloth[0]}"/>
     </linearGradient>
     <filter id="grain${id}" x="0" y="0" width="100%" height="100%">
@@ -133,10 +156,13 @@ function doc(w, h, inner) {
     </filter>
   </defs>`
 
+  // Garment silhouettes are emitted with a {{FAB}} placeholder because the
+  // gradient id is only known here; substitute it now.
   const body = `<rect width="${w}" height="${h}" fill="url(#bg${id})"/>
-  <rect width="${w}" height="${h}" fill="url(#lit${id})"/>
-  ${inner.art}
-  <rect width="${w}" height="${h}" filter="url(#grain${id})" opacity="0.055"/>`
+  <rect width="${w}" height="${h}" fill="url(#key${id})"/>
+  ${inner.art.replaceAll('{{FAB}}', `url(#fab${id})`).replaceAll('{{FIG}}', 'url(#figFIG)')}
+  <rect width="${w}" height="${h}" fill="url(#vig${id})"/>
+  <rect width="${w}" height="${h}" filter="url(#grain${id})" opacity="0.05"/>`
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" role="img">${defs}<g id="art">${body}</g></svg>`
 }
@@ -151,228 +177,368 @@ function save(rel, w, h, inner) {
 const shadow = (cx, cy, rx, ry, op = 0.16) =>
   `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#111111" opacity="${op}"/>`
 
-/** Local-space contact point of a figure (bottom of the contact shadow). */
-const FIG_FOOT = 978
+/**
+ * The box every garment silhouette occupies in its native 800 x 1000 frame.
+ * Hero, collection and banner art re-frames this box rather than the whole
+ * 800 x 1000 canvas, so a garment fills a sensible share of the card instead of
+ * arriving with 60% empty margin.
+ */
+const GARMENT_BOX = { x: 210, y: 200, w: 380, h: 720 }
 
-/** Transform that plants a figure's feet on a floor line, centred at `cx`. */
-const place = (cx, floorY, scale = 1) =>
-  `translate(${(cx - 150 * scale).toFixed(1)} ${(floorY - FIG_FOOT * scale).toFixed(1)}) scale(${scale})`
+/** Scale a garment's artwork to `targetH` tall, centred on `cx`, standing on `floorY`. */
+function garmentInFrame(art, cx, floorY, targetH) {
+  const s = targetH / GARMENT_BOX.h
+  const tx = cx - (GARMENT_BOX.x + GARMENT_BOX.w / 2) * s
+  const ty = floorY - GARMENT_BOX.h * s
+  return `<g transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)}) scale(${s.toFixed(3)})">${art}</g>`
+}
 
 /* ------------------------------------------------------------------ */
 /* Garment artwork (800 x 1000)                                        */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Silhouettes are generated rather than hand-traced. A right-hand outline is
+ * sampled from bezier segments and then mirrored across the centre line, so the
+ * shape is always smooth and left/right symmetric. Hand written path data for
+ * the tops drifted out of proportion and rendered as narrow unreadable strips.
+ */
+const CX = 400
+
+/** Sample a cubic bezier into points. */
+function bez(from, c1, c2, to, steps = 14) {
+  const out = []
+  for (let i = 1; i <= steps; i += 1) {
+    const t = i / steps
+    const u = 1 - t
+    out.push([
+      u * u * u * from[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * to[0],
+      u * u * u * from[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * to[1],
+    ])
+  }
+  return out
+}
+
+/** Close a point ring with quadratics through each point (smooth polygon). */
+function smoothClosed(pts) {
+  const f = (v) => v.toFixed(1)
+  const n = pts.length
+  let d = `M${f(pts[0][0])} ${f(pts[0][1])}`
+  for (let i = 0; i < n; i += 1) {
+    const cur = pts[i]
+    const nxt = pts[(i + 1) % n]
+    d += `Q${f(cur[0])} ${f(cur[1])} ${f((cur[0] + nxt[0]) / 2)} ${f((cur[1] + nxt[1]) / 2)}`
+  }
+  return `${d}Z`
+}
+
+/** Mirror a right-hand outline (x >= cx) into a closed symmetric silhouette. */
+function symmetric(hx, cx = CX) {
+  const left = hx
+    .slice(1, -1)
+    .reverse()
+    .map(([x, y]) => [2 * cx - x, y])
+  return smoothClosed([...hx, ...left])
+}
+
+/**
+ * A top: neckline, shoulder, sleeve, underarm, side seam and hem.
+ *
+ * The outline starts at the centre of the neckline, which is the LOW point of
+ * the neck opening; the shoulder tip is the highest. Starting the ring at the
+ * centre-top instead (a common slip) put a bump above both shoulders, which read
+ * as a "moth" silhouette rather than a garment.
+ */
+function topOutline({
+  neckY = 258,
+  neckHalf = 46,
+  neckDrop = 36,
+  shoulderY = 232,
+  shoulderHalf = 132,
+  sleeveOut = 178,
+  sleeveHemY = 486,
+  underarmHalf = 126,
+  waistHalf = 118,
+  hemHalf = 128,
+  hemY = 740,
+} = {}) {
+  // The sleeve leaves the shoulder and falls away from it; the outline only ever
+  // travels downward from the shoulder tip, so it can never spike or puff.
+  const cuffX = CX + sleeveOut
+  const cuffTopY = shoulderY + Math.max(30, (sleeveHemY - shoulderY) * 0.24)
+
+  const neckBaseY = neckY + neckDrop
+  const hx = [[CX, neckBaseY]]
+  // out of the neck dip and up to the neck/shoulder junction
+  hx.push(
+    ...bez(
+      [CX, neckBaseY],
+      [CX + neckHalf * 0.45, neckBaseY],
+      [CX + neckHalf - 8, neckY + 12],
+      [CX + neckHalf, neckY],
+      8,
+    ),
+  )
+  // out to the shoulder tip, the highest point of the garment
+  hx.push(
+    ...bez(
+      [CX + neckHalf, neckY],
+      [CX + neckHalf + 22, shoulderY + 4],
+      [CX + shoulderHalf - 30, shoulderY],
+      [CX + shoulderHalf, shoulderY],
+      8,
+    ),
+  )
+  hx.push(...bez([CX + shoulderHalf, shoulderY], [CX + shoulderHalf + 24, shoulderY + 8], [cuffX - 20, cuffTopY - 8], [cuffX, cuffTopY + 26], 12))
+  hx.push(...bez([cuffX, cuffTopY + 26], [cuffX + 2, cuffTopY + 40], [cuffX - 2, sleeveHemY - 26], [cuffX - 12, sleeveHemY], 10))
+  hx.push(...bez([cuffX - 12, sleeveHemY], [cuffX - 30, sleeveHemY + 22], [CX + underarmHalf + 24, sleeveHemY + 34], [CX + underarmHalf, sleeveHemY + 48], 10))
+  hx.push(...bez([CX + underarmHalf, sleeveHemY + 48], [CX + waistHalf + 12, sleeveHemY + 130], [CX + waistHalf - 8, hemY - 150], [CX + hemHalf, hemY - 12], 14))
+  hx.push(...bez([CX + hemHalf, hemY - 12], [CX + hemHalf * 0.6, hemY + 6], [CX + 40, hemY + 8], [CX, hemY + 8], 10))
+  return symmetric(hx)
+}
+
+/** Trousers: waistband, hip, outer leg, hem, inseam and crotch. */
+function trouserOutline({ waistY = 268, waistHalf = 88, hipY = 380, hipHalf = 102, hemY = 862, hemOuter = 88, hemInner = 30 } = {}) {
+  const hx = [[CX, waistY]]
+  hx.push(...bez([CX, waistY], [CX + waistHalf * 0.55, waistY - 4], [CX + waistHalf - 8, waistY + 4], [CX + waistHalf, waistY + 10], 6))
+  hx.push(...bez([CX + waistHalf, waistY + 10], [CX + waistHalf + 12, waistY + 40], [CX + hipHalf, hipY - 30], [CX + hipHalf, hipY], 8))
+  hx.push(...bez([CX + hipHalf, hipY], [CX + hipHalf + 4, hipY + 170], [CX + hemOuter + 6, hemY - 190], [CX + hemOuter, hemY - 14], 16))
+  hx.push(...bez([CX + hemOuter, hemY - 14], [CX + hemOuter, hemY - 6], [CX + hemOuter - 4, hemY], [CX + hemInner + 10, hemY], 6))
+  hx.push(...bez([CX + hemInner + 10, hemY], [CX + hemInner + 2, hemY - 130], [CX + hemInner - 4, hemY - 300], [CX + 14, waistY + 200], 14))
+  hx.push([CX, waistY + 214])
+  return symmetric(hx)
+}
+
+/** A skirt: waistband, hip, flare and hem. */
+function skirtOutline({ waistY = 268, waistHalf = 76, hipY = 400, hemY = 856, hemHalf = 176 } = {}) {
+  const hx = [[CX, waistY]]
+  hx.push(...bez([CX, waistY], [CX + waistHalf * 0.55, waistY - 4], [CX + waistHalf - 8, waistY + 4], [CX + waistHalf, waistY + 12], 6))
+  hx.push(...bez([CX + waistHalf, waistY + 12], [CX + waistHalf + 14, waistY + 46], [CX + hemHalf * 0.5, hipY - 20], [CX + hemHalf * 0.52, hipY], 10))
+  hx.push(...bez([CX + hemHalf * 0.52, hipY], [CX + hemHalf * 0.66, hipY + 200], [CX + hemHalf - 24, hemY - 170], [CX + hemHalf, hemY - 10], 18))
+  hx.push(...bez([CX + hemHalf, hemY - 10], [CX + hemHalf * 0.6, hemY + 6], [CX + 40, hemY + 8], [CX, hemY + 8], 10))
+  return symmetric(hx)
+}
+
+/** A dress: bodice, cap sleeve, waist and A-line skirt in one outline. */
+function dressOutline({ neckY = 268, neckHalf = 40, neckDrop = 30, shoulderY = 244, shoulderHalf = 112, armY = 340, armHalf = 150, underarmHalf = 104, waistY = 440, waistHalf = 96, hemY = 858, hemHalf = 172 } = {}) {
+  const neckBaseY = neckY + neckDrop
+  const hx = [[CX, neckBaseY]]
+  hx.push(...bez([CX, neckBaseY], [CX + neckHalf * 0.45, neckBaseY], [CX + neckHalf - 8, neckY + 10], [CX + neckHalf, neckY], 8))
+  hx.push(...bez([CX + neckHalf, neckY], [CX + neckHalf + 20, shoulderY + 4], [CX + shoulderHalf - 28, shoulderY], [CX + shoulderHalf, shoulderY], 8))
+  // cap sleeve: out and down to the sleeve edge, then a hard tuck into the
+  // underarm so the bodice reads as a body rather than a cape.
+  hx.push(...bez([CX + shoulderHalf, shoulderY], [CX + shoulderHalf + 26, shoulderY + 16], [CX + armHalf, armY - 34], [CX + armHalf, armY], 10))
+  hx.push(...bez([CX + armHalf, armY], [CX + armHalf - 6, armY + 26], [CX + underarmHalf + 22, armY + 56], [CX + underarmHalf, armY + 74], 10))
+  hx.push(...bez([CX + underarmHalf, armY + 74], [CX + waistHalf + 6, waistY - 40], [CX + waistHalf - 2, waistY - 16], [CX + waistHalf, waistY], 8))
+  hx.push(...bez([CX + waistHalf, waistY], [CX + waistHalf + 48, waistY + 190], [CX + hemHalf - 30, hemY - 160], [CX + hemHalf, hemY - 10], 18))
+  hx.push(...bez([CX + hemHalf, hemY - 10], [CX + hemHalf * 0.6, hemY + 6], [CX + 40, hemY + 8], [CX, hemY + 8], 10))
+  return symmetric(hx)
+}
+
+let clipSeq = 0
+
+/** Garment = contact shadow, filled silhouette, then detail clipped to it. */
+function garment(d, c, footY, detail) {
+  clipSeq += 1
+  const id = `cl${clipSeq}`
+  // The silhouette is filled with the fabric gradient rather than a flat tone.
+  // {{FAB}} is substituted by doc(), which owns the per-document gradient id.
+  return `${shadow(400, footY + 16, 148, 18)}
+  <defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs>
+  <path fill="{{FAB}}" d="${d}"/>
+  <g clip-path="url(#${id})">${detail}</g>`
+}
+
+/** Cuff band across a trouser hem. */
+const hemRib = (c, y, outer, inner) =>
+  `<path fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.3" d="M${CX - outer} ${y - 14}h${outer - inner}h${outer - inner}"/>`
+
+/** Footwear in profile: upper, contrasting sole, collar opening and laces. */
+function shoe(c, kind) {
+  return `
+    ${shadow(420, 712, 224, 20)}
+    <path fill="${c[0]}" d="M206 592c0-56 26-98 72-120 30-14 62-18 96-14 24 3 44 12 60 28l30 32c24 26 58 44 100 54 40 10 66 28 72 52 4 18-8 34-32 42-32 11-76 16-134 16H242c-22 0-36-12-36-30z"/>
+    <path fill="${c[1]}" d="M190 640c0-8 6-14 16-14h412c14 0 22 8 20 18-4 18-26 30-62 30H232c-26 0-42-12-42-34z"/>
+    <path fill="${c[0]}" d="M300 500c24-14 52-20 82-18l-14 66c-26-4-52-16-74-32z"/>
+    <ellipse cx="354" cy="508" rx="36" ry="13" fill="${c[1]}" opacity="0.5"/>
+    ${
+      kind === 'sneaker'
+        ? `<g fill="none" stroke="${c[1]}" stroke-width="7" stroke-linecap="round" opacity="0.9">
+             <path d="M352 492l36 28M388 490l36 28M424 494l34 26"/>
+           </g>`
+        : `<path fill="none" stroke="${c[1]}" stroke-width="9" stroke-linecap="round" opacity="0.9" d="M334 550h92"/>`
+    }
+    <path fill="${c[0]}" d="M596 564c30 6 52 16 66 30 10 10 12 20 6 30-8 12-28 18-60 18-14 0-22-6-22-18 0-22 4-42 10-60z"/>
+    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M258 678h296"/>`
+}
+
 const GARMENTS = {
-  knit: (c) => `
-    ${shadow(400, 748, 168, 26)}
-    <path fill="${c[0]}" d="M352 232c0-24 22-40 48-40s48 16 48 40c16 5 52 12 70 24 30 20 46 66 54 114l24 152c8 36-18 54-38 42l-36-24v166c0 18-14 30-32 30H304c-18 0-32-12-32-30V540l-36 24c-20 12-46-6-38-42l24-152c8-48 24-94 54-114 18-12 54-19 70-24Z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M352 232c0-24 22-40 48-40 10 0 19 2 27 6-14 8-23 20-23 34 0 18 10 34 26 44-6 2-12 3-18 3-26 0-48-16-48-40z"/>
-    <g stroke="${c[1]}" stroke-width="3" opacity="0.55" fill="none">
-      ${Array.from({ length: 7 }, (_, i) => `<path d="M300 ${470 + i * 22}h200"/>`).join('')}
-    </g>
-    <path fill="none" stroke="${c[1]}" stroke-width="4" opacity="0.5" d="M272 660h256"/>`,
+  // Ribbed knit: a relaxed boxy body, set-in sleeves, scoop neck, ribbed hem.
+  knit: (c) =>
+    garment(
+      topOutline({ neckHalf: 50, neckDrop: 34, shoulderHalf: 140, sleeveOut: 186, sleeveHemY: 500, hemHalf: 142, hemY: 748 }),
+      c,
+      756,
+      `<path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M330 292c44 20 96 20 140 0"/>
+      <g stroke="${c[1]}" stroke-width="3" opacity="0.45" fill="none">
+        ${Array.from({ length: 7 }, (_, i) => `<path d="M300 ${512 + i * 26}h200"/>`).join('')}
+      </g>
+      <path fill="none" stroke="${c[1]}" stroke-width="4" opacity="0.4" d="M288 744h224"/>`,
+    ),
 
-  tee: (c) => `
-    ${shadow(400, 706, 150, 24)}
-    <path fill="${c[0]}" d="M360 250c0-24 18-38 40-38s40 14 40 38l72 20c28 10 40 48 44 84l10 100c4 26-14 40-30 34l-28-12 4 186c0 20-16 32-36 32H324c-20 0-36-12-36-32l4-186-28 12c-16 6-34-8-30-34l10-100c4-36 16-74 44-84z"/>
-    <path fill="${c[1]}" opacity="0.45" d="M360 250c0-24 18-38 40-38 8 0 16 2 22 6-10 9-16 20-16 32 0 16 9 30 23 39-5 1-11 1-17 1-22 0-40-14-40-38z"/>
-    <g stroke="${c[1]}" stroke-width="2.5" opacity="0.45" fill="none">
-      ${Array.from({ length: 4 }, (_, i) => `<path d="M290 ${560 + i * 20}h220"/>`).join('')}
-    </g>`,
+  tee: (c) =>
+    garment(
+      topOutline({ neckY: 244, neckHalf: 44, neckDrop: 26, shoulderY: 252, shoulderHalf: 134, sleeveOut: 178, sleeveHemY: 420, hemHalf: 134, hemY: 726 }),
+      c,
+      734,
+      `<path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M330 282c44 20 96 20 140 0"/>`,
+    ),
 
-  shirt: (c) => `
-    ${shadow(400, 786, 152, 24)}
-    <path fill="${c[0]}" d="M358 244c0-22 18-34 42-34s42 12 42 34l76 22c30 9 42 50 46 88l10 92c4 24-14 38-30 32l-26-12 4 296c0 18-14 28-34 28H312c-20 0-34-10-34-28l4-296-26 12c-16 6-34-8-30-32l10-92c4-38 16-79 46-88z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M358 244c0-22 18-34 42-34l-26 62 34 34-18 32z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M442 244c0-22-18-34-42-34l26 62-34 34 18 32z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.6" d="M400 306v450"/>
-    <g fill="${c[1]}">
-      ${Array.from({ length: 6 }, (_, i) => `<circle cx="400" cy="${372 + i * 62}" r="5"/>`).join('')}
-    </g>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M276 470h30M494 470h30M276 640h30M494 640h30"/>`,
+  shirt: (c) =>
+    garment(
+      topOutline({ neckY: 246, neckHalf: 42, neckDrop: 30, shoulderY: 254, shoulderHalf: 138, sleeveOut: 182, sleeveHemY: 540, waistHalf: 120, hemHalf: 130, hemY: 812 }),
+      c,
+      820,
+      `<path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M400 270v556"/>
+      <g fill="${c[1]}" opacity="0.75">
+        ${Array.from({ length: 5 }, (_, i) => `<circle cx="400" cy="${356 + i * 90}" r="4.5"/>`).join('')}
+      </g>
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.32" d="M304 470h42M454 470h42M304 640h42M454 640h42"/>`,
+    ),
 
-  cardigan: (c) => `
-    ${shadow(400, 806, 168, 26)}
-    <path fill="${c[0]}" d="M354 236c0-24 20-38 46-38s46 14 46 38c18 6 54 14 72 28 30 24 44 72 52 122l24 148c8 34-18 52-38 40l-34-22v250c0 18-14 28-34 28H308c-20 0-34-10-34-28V552l-34 22c-20 12-46-6-38-40l24-148c8-50 22-98 52-122 18-14 54-22 72-28Z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M354 236c0-24 20-38 46-38 9 0 17 2 25 6-14 9-24 20-25 32-2 22 14 42 36 50-8 1-16 0-24-2-26 0-46-14-46-38z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.55">
-      ${Array.from({ length: 9 }, (_, i) => `<path d="M300 ${500 + i * 26}h200"/>`).join('')}
-      ${Array.from({ length: 4 }, (_, i) => `<path d="M262 ${480 + i * 40}h44M494 ${480 + i * 40}h44"/>`).join('')}
-    </g>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.6" d="M400 300v506"/>`,
+  cardigan: (c) =>
+    garment(
+      topOutline({ neckY: 244, neckHalf: 46, neckDrop: 32, shoulderY: 252, shoulderHalf: 140, sleeveOut: 188, sleeveHemY: 560, waistHalf: 122, hemHalf: 134, hemY: 820 }),
+      c,
+      828,
+      `<path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M400 268v556"/>
+      <g stroke="${c[1]}" stroke-width="2.5" opacity="0.3" fill="none">
+        ${Array.from({ length: 8 }, (_, i) => `<path d="M300 ${470 + i * 28}h200"/>`).join('')}
+      </g>
+      <g fill="${c[1]}" opacity="0.7">
+        ${Array.from({ length: 4 }, (_, i) => `<circle cx="400" cy="${400 + i * 104}" r="4.5"/>`).join('')}
+      </g>`,
+    ),
 
-  sweatshirt: (c) => `
-    ${shadow(400, 800, 178, 28)}
-    <path fill="${c[0]}" d="M352 250c0-26 20-40 48-40s48 14 48 40c20 6 62 16 84 32 32 24 48 74 58 128l28 152c10 38-18 58-42 44l-44-30v224c0 20-16 30-38 30H306c-22 0-38-10-38-30V616l-44 30c-24 14-52-6-42-44l28-152c10-54 26-104 58-128 22-16 64-26 84-32Z"/>
-    <path fill="${c[1]}" opacity="0.45" d="M352 250c0-26 20-40 48-40 10 0 19 2 27 6-16 9-25 20-26 34-2 20 12 38 34 46-6 2-12 2-19 2-28 0-48-14-48-40z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.5">
-      <path d="M268 604h264M262 640h276M270 590h260"/>
-    </g>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.55" d="M400 250v520"/>`,
+  sweatshirt: (c) =>
+    garment(
+      topOutline({ neckY: 248, neckHalf: 48, neckDrop: 26, shoulderY: 258, shoulderHalf: 148, sleeveOut: 198, sleeveHemY: 520, underarmHalf: 140, waistHalf: 140, hemHalf: 152, hemY: 762 }),
+      c,
+      770,
+      `<path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M330 298c44 18 96 18 140 0"/>
+      <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.4">
+        <path d="M288 700h224M284 734h232M292 666h216"/>
+      </g>`,
+    ),
 
-  trouser: (c) => `
-    ${shadow(400, 862, 168, 24)}
-    <path fill="${c[0]}" d="M316 262c46-14 122-14 168 0l10 250 24 344h-96l-24-282-22 282h-96l24-344z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M316 262c46-14 122-14 168 0l4 60c-46-12-126-12-176 0z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M400 330v520"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.4" d="M336 296h128M300 300v22M500 300v22"/>`,
+  coat: (c) =>
+    garment(
+      topOutline({ neckY: 246, neckHalf: 44, neckDrop: 30, shoulderY: 254, shoulderHalf: 144, sleeveOut: 194, sleeveHemY: 600, waistHalf: 124, hemHalf: 142, hemY: 888 }),
+      c,
+      896,
+      `<path fill="none" stroke="${c[1]}" stroke-width="4" opacity="0.5" d="M400 264v624"/>
+      <rect x="292" y="524" width="216" height="24" fill="${c[1]}" opacity="0.6"/>
+      <g fill="${c[1]}" opacity="0.8"><circle cx="400" cy="536" r="8"/></g>
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.32" d="M320 706h50M430 706h50"/>`,
+    ),
 
-  wideTrouser: (c) => `
-    ${shadow(400, 866, 196, 26)}
-    <path fill="${c[0]}" d="M312 258c50-14 126-14 176 0l6 244 22 350h-116l-22-292-18 292H222l22-350z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M312 258c50-14 126-14 176 0l3 62c-52-12-128-12-182 0z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.45" d="M400 324v520"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.35">
-      <path d="M280 620h96M424 620h96M266 700h108M426 700h108"/>
-    </g>`,
+  dress: (c) =>
+    garment(dressOutline({}), c, 866, `<g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.28">
+        ${Array.from({ length: 4 }, (_, i) => `<path d="M${292 + i * 8} 620c40 ${20 * i} ${150 - i * 6} ${20 * i} ${192 - i * 14} 0"/>`).join('')}
+      </g>
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M400 232v92"/>`),
 
-  denim: (c) => `
-    ${shadow(400, 858, 158, 24)}
-    <path fill="${c[0]}" d="M320 266c44-12 116-12 160 0l8 244 22 336h-92l-20-276-20 276h-92l22-336z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M320 266c44-12 116-12 160 0l3 58c-44-10-122-10-166 0z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.5">
-      <path d="M400 336v500M336 290h128"/>
-      <path d="M296 470h66M438 470h66M300 560h62M438 560h62"/>
-    </g>
-    <circle cx="400" cy="322" r="5" fill="${c[1]}"/>`,
+  trouser: (c) =>
+    garment(trouserOutline({}), c, 878, `${hemRib(c, 862, 88, 30)}
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M400 340v506"/>
+      <path fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.3" d="M340 300h120M298 306v18M502 306v18"/>
+      <path fill="none" stroke="${c[1]}" stroke-width="2" opacity="0.22" d="M330 430h40M430 430h40"/>`),
 
-  chino: (c) => `
-    ${shadow(400, 858, 160, 24)}
-    <path fill="${c[0]}" d="M322 258c44-12 112-12 156 0l6 242 18 340h-88l-20-274-20 274h-88l18-340z"/>
-    <path fill="${c[1]}" opacity="0.45" d="M322 258c44-12 112-12 156 0l3 58c-42-10-118-10-162 0z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M400 328v500M348 300h104"/>`,
+  wideTrouser: (c) =>
+    garment(trouserOutline({ waistHalf: 92, hipHalf: 112, hemY: 868, hemOuter: 112, hemInner: 44 }), c, 884, `${hemRib(c, 868, 112, 44)}
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M400 340v512"/>
+      <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.26">
+        <path d="M300 620h84M416 620h84M288 700h96M416 700h96"/>
+      </g>`),
 
-  skirt: (c) => `
-    ${shadow(400, 848, 186, 26)}
-    <path fill="${c[0]}" d="M330 262c42-12 98-12 140 0l10 96 68 470c4 24-14 40-38 40H290c-24 0-42-16-38-40l68-470z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M330 262c42-12 98-12 140 0l3 56c-44-10-102-10-146 0z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.42">
-      ${Array.from({ length: 6 }, (_, i) => `<path d="M${312 + i * 4} 400l-24 430M${360 + i * 5} 400l-10 434M${440 - i * 5} 400l10 434M${488 - i * 4} 400l24 430"/>`).join('')}
-    </g>`,
+  denim: (c) =>
+    garment(trouserOutline({ waistHalf: 86, hipHalf: 98, hemY: 866, hemOuter: 84, hemInner: 28 }), c, 882, `${hemRib(c, 866, 84, 28)}
+      <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.38">
+        <path d="M400 336v512M344 298h112"/>
+        <path d="M304 470h60M436 470h60M308 566h56M436 566h56"/>
+      </g>
+      <circle cx="400" cy="322" r="4.5" fill="${c[1]}" opacity="0.6"/>`),
 
-  dress: (c) => `
-    ${shadow(400, 856, 190, 28)}
-    <path fill="${c[0]}" d="M356 252c0-24 20-38 44-38s44 14 44 38l32 22c22 16 30 46 28 76l-16 148c52 96 82 226 92 362 4 26-14 44-40 44H260c-26 0-44-18-40-44 10-136 40-266 92-362l-16-148c-2-30 6-60 28-76z"/>
-    <path fill="${c[1]}" opacity="0.45" d="M356 252c0-24 20-38 44-38 8 0 16 2 23 5-13 9-21 20-22 33-2 22 12 41 33 49-5 1-11 1-17 1-24 0-44-14-44-38z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.4">
-      ${Array.from({ length: 5 }, (_, i) => `<path d="M${300 + i * 10} 560c${40} ${20 * i} ${160 - i * 8} ${20 * i} ${200 - i * 20} 0"/>`).join('')}
-    </g>
-    <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5" d="M400 240v116"/>`,
+  chino: (c) =>
+    garment(trouserOutline({ waistHalf: 86, hipHalf: 98, hemY: 864, hemOuter: 86, hemInner: 30 }), c, 880, `${hemRib(c, 864, 86, 30)}
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.4" d="M400 336v510M352 298h96"/>
+      <path fill="none" stroke="${c[1]}" stroke-width="2" opacity="0.25" d="M336 430h38M426 430h38"/>`),
 
-  coat: (c) => `
-    ${shadow(400, 890, 190, 28)}
-    <path fill="${c[0]}" d="M352 240c0-24 20-40 48-40s48 16 48 40c22 6 62 16 80 34 30 30 44 84 52 142l26 208c8 40-22 60-46 44l-46-34v304c0 18-14 28-34 28H320c-20 0-34-10-34-28V584l-46 34c-24 16-54-4-46-44l26-208c8-58 22-112 52-142 18-18 58-28 80-34Z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M352 240c0-24 20-40 48-40 10 0 19 2 28 6-17 9-28 20-29 34-2 22 14 42 38 50-7 2-14 2-22 2-30 0-48-16-48-40z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="3.5" opacity="0.6" d="M400 280v618"/>
-    <rect x="300" y="546" width="200" height="26" fill="${c[1]}" opacity="0.7"/>
-    <g fill="${c[1]}" opacity="0.9"><circle cx="400" cy="559" r="9"/></g>`,
+  skirt: (c) =>
+    garment(skirtOutline({}), c, 872, `<g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.28">
+        ${Array.from({ length: 5 }, (_, i) => `<path d="M${320 + i * 5} 400l-24 440M${362 + i * 6} 400l-9 442M${438 - i * 6} 400l9 442M${480 - i * 5} 400l24 440"/>`).join('')}
+      </g>
+      <path fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.32" d="M300 278h200"/>`),
 
-  sneaker: (c) => `
-    ${shadow(410, 704, 250, 24)}
-    <path fill="${c[0]}" d="M164 556c0-42 28-70 70-80l84-16c42-8 70 6 92 34l34 44c32 28 84 38 138 44 58 8 92 30 98 66 6 36-18 56-56 58H212c-30 0-48-18-48-46z"/>
-    <path fill="${c[1]}" d="M158 622h492c10 26-8 46-42 48H212c-30 0-46-16-54-48z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M164 556c0-42 28-70 70-80l30-6c-16 26-14 56 10 74-24 10-40 24-46 44-8 24 4 48 30 58-56-2-94-18-94-90z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="6" stroke-linecap="round" opacity="0.85">
-      <path d="M300 486l38 30M330 470l38 30M360 456l38 30"/>
-    </g>
-    <g fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.5"><path d="M480 566h180M500 600h160"/></g>`,
-
-  loafer: (c) => `
-    ${shadow(410, 700, 232, 24)}
-    <path fill="${c[0]}" d="M196 520c0-30 18-46 46-52l86-20c34-8 58 4 76 26l40 46c34 26 82 34 132 38 50 4 76 22 78 50 2 34-28 52-76 52H232c-24 0-36-14-36-40z"/>
-    <path fill="${c[1]}" d="M198 620h452c-4 24-30 40-72 40H232c-24 0-34-16-34-40z"/>
-    <path fill="${c[1]}" opacity="0.55" d="M330 500c30-8 52 2 70 24l26 34-72 12c-30-6-44-22-40-42 3-13 8-22 16-28z"/>
-    <path fill="none" stroke="${c[1]}" stroke-width="7" opacity="0.9" d="M330 546h104"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="3" opacity="0.45"><path d="M430 596h190M250 596h100"/></g>`,
+  sneaker: (c) => shoe(c, 'sneaker'),
+  loafer: (c) => shoe(c, 'loafer'),
 
   shoulderBag: (c) => `
-    ${shadow(400, 742, 170, 24)}
-    <path fill="none" stroke="${c[0]}" stroke-width="16" d="M300 400c0-70 44-112 100-112s100 42 100 112"/>
-    <path fill="${c[0]}" d="M240 392h320c14 0 24 10 24 24v268c0 30-22 52-52 52H268c-30 0-52-22-52-52V416c0-14 10-24 24-24z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M240 392h320c14 0 24 10 24 24v58H216v-58c0-14 10-24 24-24z"/>
-    <path fill="${c[1]}" d="M216 470h368v26H216z"/>
-    <rect x="352" y="500" width="96" height="66" rx="10" fill="${c[1]}" opacity="0.85"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.45"><path d="M266 620h268"/></g>`,
+    ${shadow(400, 786, 150, 18)}
+    <path fill="none" stroke="${c[0]}" stroke-width="15" stroke-linecap="round" d="M302 418c0-70 44-114 98-114s98 44 98 114"/>
+    <path fill="${c[0]}" d="M240 404h320c16 0 28 12 28 28v292c0 32-26 58-58 58H270c-32 0-58-26-58-58V432c0-16 12-28 28-28z"/>
+    <path fill="${c[1]}" opacity="0.38" d="M240 404h320c16 0 28 12 28 28v52H212v-52c0-16 12-28 28-28z"/>
+    <path fill="${c[1]}" d="M212 476h376v30H212z"/>
+    <path fill="none" stroke="${c[0]}" stroke-width="3" opacity="0.28" d="M212 506h376"/>
+    <rect x="352" y="546" width="96" height="64" rx="10" fill="${c[1]}" opacity="0.85"/>
+    <path fill="none" stroke="${c[0]}" stroke-width="3" opacity="0.25" d="M262 660h276"/>
+    <g fill="${c[1]}" opacity="0.65"><circle cx="230" cy="491" r="5"/><circle cx="570" cy="491" r="5"/></g>`,
 
   crossbody: (c) => `
-    ${shadow(400, 720, 150, 22)}
-    <path fill="none" stroke="${c[0]}" stroke-width="14" d="M252 340h296" transform="rotate(-18 400 340)"/>
-    <path fill="${c[0]}" d="M262 420h276c12 0 22 10 22 22v220c0 26-20 46-46 46H286c-26 0-46-20-46-46V442c0-12 10-22 22-22z"/>
-    <path fill="${c[1]}" opacity="0.5" d="M262 420h276c12 0 22 10 22 22v54H240v-54c0-12 10-22 22-22z"/>
-    <path fill="${c[1]}" d="M240 492h320v24H240z"/>
-    <rect x="366" y="520" width="68" height="46" rx="8" fill="${c[1]}" opacity="0.85"/>`,
+    ${shadow(400, 768, 130, 16)}
+    <path fill="none" stroke="${c[0]}" stroke-width="13" stroke-linecap="round" d="M240 336c62-42 204-54 312-24"/>
+    <path fill="${c[0]}" d="M272 428h256c13 0 23 10 23 23v214c0 27-21 48-48 48H297c-27 0-48-21-48-48V451c0-13 10-23 23-23z"/>
+    <path fill="${c[1]}" opacity="0.38" d="M272 428h256c13 0 23 10 23 23v50H249v-50c0-13 10-23 23-23z"/>
+    <path fill="${c[1]}" d="M249 494h302v26H249z"/>
+    <path fill="none" stroke="${c[0]}" stroke-width="3" opacity="0.28" d="M249 520h302"/>
+    <rect x="370" y="550" width="62" height="42" rx="8" fill="${c[1]}" opacity="0.85"/>
+    <g fill="${c[1]}" opacity="0.65"><circle cx="264" cy="507" r="4.5"/><circle cx="536" cy="507" r="4.5"/></g>`,
 
+  // A looped scarf: a wrapped band with two tails falling from it.
   scarf: (c) => `
-    ${shadow(400, 846, 130, 20)}
-    <path fill="${c[0]}" d="M262 180c46 90 34 190-6 268-38 76-52 150-40 232 4 28-18 44-42 32-72-36-96-120-76-212 20-94 30-190 6-268-6-22 14-40 34-28 18 10 26 6 38-10 16-22 62-34 86-14z"/>
-    <path fill="${c[1]}" opacity="0.45" d="M262 180c46 90 34 190-6 268l-34-16c-30-70-40-166 2-252z"/>
-    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.45">
-      ${Array.from({ length: 8 }, (_, i) => `<path d="M196 ${700 + i * 18}h120"/>`).join('')}
+    ${shadow(400, 890, 114, 16)}
+    <path fill="${c[0]}" d="M262 196c0-14 10-24 24-24h248c14 0 24 10 24 24 0 16-14 28-32 28H294c-18 0-32-12-32-28z"/>
+    <path fill="${c[0]}" d="M300 232h84c10 0 18 8 18 18v306c0 14 8 24 22 24 12 0 20-8 20-20V258c0-16 10-26 26-26h54c14 0 24 10 24 24v304c0 20-12 34-32 34-16 0-28-10-28-28V268h-44v272c0 26-16 42-42 42-26 0-44-18-44-48V268h-40c-18 0-28-14-28-36z"/>
+    <path fill="${c[1]}" opacity="0.3" d="M262 196c0-14 10-24 24-24h40c-8 8-12 18-12 30 0 8 2 14 6 18h-34c-14 0-24-10-24-24z"/>
+    <g fill="none" stroke="${c[1]}" stroke-width="2.5" opacity="0.35">
+      ${Array.from({ length: 6 }, (_, i) => `<path d="M306 ${520 + i * 32}h86M470 ${540 + i * 32}h86"/>`).join('')}
     </g>`,
 }
 
 /* ------------------------------------------------------------------ */
-/* Figures for hero / collections / banners (300 x 1000 local space)   */
+/* Studio set for hero / collection / banner art                       */
 /* ------------------------------------------------------------------ */
 
-function figure({ cloth, skin, hair, longHair = false, pose = 'coat' }) {
-  const c0 = cloth[0]
-  const c1 = cloth[1]
-  const head = `<ellipse cx="150" cy="72" rx="30" ry="37" fill="${skin}"/>
-    ${
-      longHair
-        ? `<path fill="${hair}" d="M114 74c-4-52 68-58 72-4 2 34-2 62-8 92-4 22-14 40-22 52-6-16-10-34-12-54-14 8-26 6-32-2-4-8-4-42 2-84z"/>`
-        : `<path fill="${hair}" d="M118 68c-2-44 66-48 64 0-2-16-14-26-32-26s-30 10-32 26z"/>`
-    }`
-  const neck = `<path d="M138 100h24l-2 30h-20z" fill="${skin}"/>`
-  const legs =
-    pose === 'wide'
-      ? `<path fill="${cloth[1] ?? c1}" d="M104 640h92l-4 250c-2 34-16 54-40 54-22 0-34-16-34-46z"/>
-         <path fill="${cloth[0]}" d="M152 640h92l14 250c4 34-10 54-40 54-24 0-38-16-38-46z"/>`
-      : pose === 'dress'
-        ? `<path fill="${skin}" d="M126 720h48l-6 200c-2 32-12 50-20 50s-18-18-20-50z"/>
-           <path fill="${skin}" d="M174 720h48l6 200c2 32-4 50-12 50s-16-18-18-50z"/>`
-        : `<path fill="${cloth[0]}" d="M112 660h76l-4 200c-2 32-14 52-34 52-20 0-30-18-30-50z"/>`
-  const shoes = `<path fill="#222222" d="M112 906c22 6 52 6 72 0l2 22c2 16-12 26-36 26-26 0-40-10-38-26z"/>
-    <path fill="#222222" d="M186 906c22 6 52 6 72 0l-2 22c-2 16 12 26 36 26 26 0 40-10 38-26z"/>`
-
-  let body
-  if (pose === 'dress') {
-    body = `<path fill="${c0}" d="M150 128c-30 0-56 14-66 40-14 38-18 130-14 236 2 54 6 100 8 126h144c2-26 6-72 8-126 4-106 0-198-14-236-10-26-36-40-66-40z"/>
-      <path fill="${c1}" opacity="0.5" d="M150 128c-12 0-24 3-34 9 18 14 26 34 26 60 0 34-14 60-34 78 18 8 30 20 34 30 4-8 8-16 8-30 0-40 0-80 0-147z"/>`
-  } else if (pose === 'wide') {
-    body = `<path fill="${c0}" d="M150 126c-34 0-62 16-74 46-16 40-20 138-16 250 2 44 4 76 6 94h168c2-18 4-50 6-94 4-112 0-210-16-250-12-30-40-46-74-46z"/>
-      <path fill="${c1}" opacity="0.5" d="M150 126c-12 0-24 3-34 8 20 16 28 40 28 68s-14 52-32 70c16 8 30 16 38 22V126z"/>`
-  } else {
-    body = `<path fill="${c0}" d="M150 124c-36 0-64 18-76 50-16 42-20 140-16 252 2 56 0 156-4 240h192c-4-84-6-184-4-240 4-112 0-210-16-252-12-32-40-50-76-50z"/>
-      <path fill="${c1}" opacity="0.5" d="M150 124c-12 0-24 3-34 9 20 16 28 40 28 70s-12 54-30 74c14 8 26 16 36 22V124z"/>
-      <path fill="none" stroke="${c1}" stroke-width="4" opacity="0.6" d="M150 130v536"/>
-      <rect x="112" y="386" width="76" height="18" fill="${c1}" opacity="0.75"/>`
-  }
-
-  return `<g>
-    ${shadow(150, 962, 108, 16, 0.18)}
-    ${legs}
-    ${body}
-    ${neck}
-    ${head}
-    ${shoes}
-  </g>`
-}
-
 function studio(w, h, opts = {}) {
-  const { floor = 0.72, tone = 0, arch = false } = opts
-  const bg = BACKDROPS[tone % BACKDROPS.length]
+  const { floor = 0.72, tone = 0, arch = false, dark = false } = opts
+  const bg = dark ? DARK_BACKDROP : BACKDROPS[tone % BACKDROPS.length]
   const floorY = h * floor
-  const art = `<rect x="0" y="${floorY}" width="${w}" height="${h - floorY}" fill="#111111" opacity="0.07"/>
-    <rect x="0" y="${floorY}" width="${w}" height="1.5" fill="#111111" opacity="0.12"/>
-    ${
-      arch
-        ? `<path fill="#ffffff" opacity="0.3" d="M${w / 2 - w * 0.3} ${floorY} V${h * 0.34} a${w * 0.3} ${w * 0.3} 0 0 1 ${w * 0.6} 0 V${floorY} Z"/>`
-        : `<rect x="${w * 0.12}" y="${h * 0.1}" width="${w * 0.76}" height="${floorY - h * 0.1}" fill="#ffffff" opacity="0.22"/>`
-    }
+  const inset = w * 0.12
+  const topY = h * 0.1
+
+  // On a dark card the wall panel is a faint lift rather than a bright sweep.
+  const panel = arch
+    ? `<path fill="#ffffff" opacity="${dark ? 0.07 : 0.34}" d="M${w / 2 - w * 0.28} ${floorY} V${h * 0.32} a${w * 0.28} ${w * 0.28} 0 0 1 ${w * 0.56} 0 V${floorY} Z"/>
+       <path fill="none" stroke="#ffffff" stroke-width="1.5" opacity="${dark ? 0.08 : 0.05}" d="M${w / 2 - w * 0.28} ${floorY} V${h * 0.32} a${w * 0.28} ${w * 0.28} 0 0 1 ${w * 0.56} 0 V${floorY}"/>`
+    : `<path fill="#ffffff" opacity="${dark ? 0.05 : 0.26}" d="M${inset} ${floorY} V${topY} H${w - inset} V${floorY} Z"/>`
+
+  const art = `
+    <rect x="0" y="${floorY}" width="${w}" height="${h - floorY}" fill="#000000" opacity="${dark ? 0.3 : 0.055}"/>
+    <rect x="0" y="${floorY}" width="${w}" height="2" fill="#000000" opacity="${dark ? 0.4 : 0.1}"/>
+    ${panel}
     ${opts.art ?? ''}`
-  return { bg, art }
+
+  return { bg, art, dark }
 }
 
 /* ------------------------------------------------------------------ */
@@ -450,54 +616,48 @@ save('categories/sale.svg', 480, 480, {
     <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DCDCD8" opacity="0.85">SALE</text>`,
 })
 
-// — collection cards
+// — collection cards: a garment presented in a studio niche, like a shop
+// window. Hero / collection / banner art uses garments rather than figures —
+// a hand-built human silhouette read as a mannequin blob at card size, while
+// the garment artwork holds up cleanly.
 for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
   const cloth = CLOTH[clothIdx % CLOTH.length]
   const w = 900
   const h = 1200
-  const f = figure({
-    cloth,
-    skin: SKIN[tone % SKIN.length],
-    hair: HAIR[tone % HAIR.length],
-    longHair: tone % 2 === 0,
-    pose: art === 'dress' ? 'dress' : art === 'coat' ? 'coat' : 'wide',
-  })
   save(`collections/${slug}.svg`, w, h, {
     ...studio(w, h, {
-      floor: 0.78,
+      floor: 0.84,
       tone,
       arch: true,
-      art: `<g transform="${place(w / 2, h * 0.78, 0.86)}">${f}</g>`,
+      art: garmentInFrame(GARMENTS[art](cloth), w / 2, h * 0.84, h * 0.6),
     }),
     cloth,
   })
 }
 
-// — hero (desktop wide + mobile portrait)
+// — hero (desktop wide + mobile portrait): a pair of styled pieces
 {
   const w = 2000
   const h = 1250
-  const left = figure({ cloth: CLOTH[2], skin: SKIN[1], hair: HAIR[0], longHair: true, pose: 'wide' })
-  const right = figure({ cloth: CLOTH[0], skin: SKIN[0], hair: HAIR[2], pose: 'coat' })
   save('hero/hero-desktop.svg', w, h, {
     ...studio(w, h, {
-      floor: 0.84,
+      floor: 0.86,
       tone: 3,
-      art: `<g transform="${place(w * 0.53, h * 0.84, 0.9)}">${left}</g>
-            <g transform="${place(w * 0.75, h * 0.84, 0.96)}">${right}</g>`,
+      art:
+        garmentInFrame(GARMENTS.coat(CLOTH[0]), w * 0.58, h * 0.86, h * 0.72) +
+        garmentInFrame(GARMENTS.denim(CLOTH[6]), w * 0.78, h * 0.86, h * 0.56),
     }),
     cloth: CLOTH[0],
   })
 
   const mw = 1000
   const mh = 1400
-  const single = figure({ cloth: CLOTH[2], skin: SKIN[1], hair: HAIR[0], longHair: true, pose: 'wide' })
   save('hero/hero-mobile.svg', mw, mh, {
     ...studio(mw, mh, {
       floor: 0.88,
       tone: 3,
       arch: true,
-      art: `<g transform="${place(mw / 2, mh * 0.88, 1.04)}">${single}</g>`,
+      art: garmentInFrame(GARMENTS.dress(CLOTH[2]), mw / 2, mh * 0.88, mh * 0.56),
     }),
     cloth: CLOTH[2],
   })
@@ -507,52 +667,60 @@ for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
 {
   const w = 1200
   const h = 900
-  const student = figure({ cloth: CLOTH[13], skin: SKIN[2], hair: HAIR[1], pose: 'coat' })
-  const file = save('banners/student.svg', w, h, {
+  // A light garment on a dark backdrop: this card is the one place the set is
+  // lit from behind, so the subject needs to stay legible against it.
+  save('banners/student.svg', w, h, {
     ...studio(w, h, {
-      floor: 0.86,
-      tone: 5,
-      art: `<g transform="${place(w * 0.68, h * 0.86, 0.68)}">${student}</g>`,
+      floor: 0.88,
+      arch: true,
+      dark: true,
+      art: garmentInFrame(GARMENTS.sweatshirt(CLOTH[11]), w * 0.68, h * 0.88, h * 0.66),
     }),
-    cloth: CLOTH[13],
+    cloth: CLOTH[11],
   })
-
-  // re-tint the student card to a dark, photographic treatment
-  const raw = readFileSync(file, 'utf8')
-  writeFileSync(
-    file,
-    raw
-      .replace('stop-color="#D3CFC5"', 'stop-color="#4A4A48"')
-      .replace('stop-color="#BEB9AE"', 'stop-color="#1E1E1D"')
-      .replace('stop-color="#ffffff" stop-opacity="0.34"', 'stop-color="#ffffff" stop-opacity="0.13"')
-      .replace('stop-color="#111111" stop-opacity="0.14"', 'stop-color="#000000" stop-opacity="0.42"')
-      .replace('fill="#ffffff" opacity="0.22"', 'fill="#ffffff" opacity="0.05"'),
-  )
 
   save('banners/new-season.svg', w, h, {
     bg: ['#F7F7F5', '#E8E8E5'],
-    cloth: CLOTH[2],
-    art: `<g transform="${place(w * 0.7, h * 0.9, 0.68)}">${figure({
-      cloth: CLOTH[3],
-      skin: SKIN[3],
-      hair: HAIR[0],
-      longHair: true,
-      pose: 'dress',
-    })}</g>`,
+    cloth: CLOTH[3],
+    art: garmentInFrame(GARMENTS.dress(CLOTH[3]), w * 0.66, h * 0.9, h * 0.68),
   })
 
+  // — store card: a shopfront. Built from an awning, a glazed window with a
+  // rail of hangers, a fascia sign and a planter, so it reads as a storefront
+  // rather than a stack of grey rectangles.
   save('banners/store.svg', 1200, 900, {
-    bg: ['#E9E6E0', '#CFCCC3'],
+    bg: ['#EFEDE8', '#D6D2C9'],
     cloth: CLOTH[5],
-    art: `<rect x="120" y="140" width="440" height="600" fill="#111111" opacity="0.08"/>
-      <rect x="150" y="170" width="380" height="540" fill="#F7F7F5" opacity="0.75"/>
-      <rect x="180" y="520" width="200" height="26" fill="#111111" opacity="0.5"/>
-      <rect x="180" y="600" width="140" height="20" fill="#111111" opacity="0.3"/>
-      <circle cx="700" cy="330" r="120" fill="#8C8C7A" opacity="0.5"/>
-      <path fill="#5F6B5C" d="M700 450c-10-90-6-160 0-190 6 30 10 100 0 190z"/>
-      <path fill="#5F6B5C" opacity="0.8" d="M700 330c-70-30-120-80-128-150 60 20 116 70 128 150z"/>
-      <rect x="640" y="600" width="200" height="70" rx="8" fill="#111111" opacity="0.25"/>
-      <rect x="880" y="430" width="180" height="240" fill="#111111" opacity="0.07"/>`,
+    art: `
+    <rect x="0" y="742" width="1200" height="158" fill="#111111" opacity="0.06"/>
+    <rect x="0" y="742" width="1200" height="2" fill="#111111" opacity="0.1"/>
+    <rect x="96" y="150" width="1008" height="594" fill="#111111" opacity="0.07"/>
+    <rect x="112" y="166" width="976" height="578" fill="#F7F7F5" opacity="0.8"/>
+    <rect x="112" y="166" width="976" height="96" fill="#111111" opacity="0.9"/>
+    <text x="600" y="228" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="14" fill="#F7F7F5">ROOT.CO</text>
+    <path fill="#111111" opacity="0.12" d="M112 262h976l40 96H72z"/>
+    ${Array.from({ length: 11 }, (_, i) => `<rect x="${80 + i * 96}" y="358" width="48" height="96" fill="#F7F7F5" opacity="${i % 2 ? 0.85 : 0.6}"/>`).join('')}
+    <path fill="#111111" opacity="0.14" d="M72 454h1056l-10 26H82z"/>
+    <rect x="150" y="486" width="560" height="258" fill="#8C8C7A" opacity="0.28"/>
+    <path fill="#ffffff" opacity="0.2" d="M150 486h360l-360 258z"/>
+    <rect x="150" y="486" width="560" height="258" fill="none" stroke="#111111" stroke-width="6" opacity="0.16"/>
+    <rect x="186" y="556" width="488" height="4" fill="#111111" opacity="0.28"/>
+    ${[0, 1, 2, 3]
+      .map(
+        (i) => `<g opacity="${0.85 - i * 0.12}">
+          <path fill="none" stroke="#111111" stroke-width="3" d="M${232 + i * 122} 556v22"/>
+          <path fill="#8C8C7A" d="M${208 + i * 122} 646l24-52 24 52z"/>
+          <path fill="none" stroke="#111111" stroke-width="2.5" opacity="0.5" d="M${200 + i * 122} 646h64"/>
+        </g>`,
+      )
+      .join('')}
+    <rect x="758" y="486" width="292" height="258" fill="#111111" opacity="0.1"/>
+    <rect x="778" y="506" width="252" height="238" fill="#F7F7F5" opacity="0.5"/>
+    <rect x="1006" y="606" width="8" height="34" fill="#111111" opacity="0.45"/>
+    <rect x="92" y="628" width="112" height="114" rx="8" fill="#111111" opacity="0.16"/>
+    <path fill="#5F6B5C" d="M148 640c-8-64-4-114 0-136 6 26 8 92 0 136z"/>
+    <path fill="#5F6B5C" opacity="0.85" d="M148 596c-44-18-76-50-82-96 38 12 74 44 82 96z"/>
+    <path fill="#5F6B5C" opacity="0.7" d="M148 610c42-16 74-46 80-90-36 10-72 40-80 90z"/>`,
   })
 }
 

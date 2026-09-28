@@ -29,7 +29,7 @@ export const benefits = [
   },
   { icon: 'RotateCcw', title: 'Easy Returns', text: '30-day return policy' },
   { icon: 'Lock', title: 'Secure Payment', text: '100% secure checkout' },
-  { icon: 'MapPin', title: 'Stores Near You', text: 'Find a C-STYLE store' },
+  { icon: 'MapPin', title: 'Stores Near You', text: 'Find a ROOT.CO store' },
 ]
 
 /** Promotional card row (PRD §11). */
@@ -38,7 +38,7 @@ export const promos = [
     id: 'student',
     variant: 'dark',
     image: '/images/banners/student.svg',
-    alt: 'Student wearing a C-STYLE coat in a studio',
+    alt: 'Student wearing a ROOT.CO coat in a studio',
     kicker: 'Student Discount',
     title: ['Students get', '10% off'],
     text: 'Verify with your student email and take 10% off your first order.',
@@ -60,10 +60,10 @@ export const promos = [
     id: 'store',
     variant: 'image',
     image: '/images/banners/store.svg',
-    alt: 'C-STYLE store interior with a window display',
+    alt: 'ROOT.CO store interior with a window display',
     kicker: 'Visit Us',
     title: ['Visit us', 'in store'],
-    text: 'Find a C-STYLE store near you.',
+    text: 'Find a ROOT.CO store near you.',
     cta: 'Find a Store',
     href: '#stores',
   },
@@ -131,7 +131,7 @@ export const footerColumns = [
 export const chatReplies = {
   'Order help': 'Happy to help with your order. Share your order number and I can check its status right away.',
   'Product question': 'Ask away — I can tell you about fit, fabric or care for any piece in the collection.',
-  'Contact support': 'Our care team replies within one business day at support@c-style.example.com.',
+  'Contact support': 'Our care team replies within one business day at support@root.co.',
 }
 
 export const supportHours = 'Mon–Fri, 9:00–18:00 CET'

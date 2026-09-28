@@ -74,7 +74,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="shell flex flex-col gap-4 py-5 text-[11px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} C-STYLE. Portfolio project — no real orders are processed.</p>
+          <p>© {new Date().getFullYear()} ROOT.CO. Portfolio project — no real orders are processed.</p>
           <div className="flex flex-wrap items-center gap-5">
             <span className="flex items-center gap-1.5">
               <Globe size={13} strokeWidth={1.5} aria-hidden="true" />

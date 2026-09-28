@@ -10,7 +10,7 @@ export default function Wordmark({ className, ...props }) {
       )}
       {...props}
     >
-      C-STYLE
+      ROOT.CO
     </span>
   )
 }

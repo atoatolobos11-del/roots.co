@@ -1,4 +1,4 @@
-# C-STYLE portfolio — local production build with Docker.
+# ROOT.CO portfolio — local production build with Docker.
 #
 #   docker compose up --build
 #   open http://localhost:8080
@@ -10,8 +10,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: c-style-portfolio:latest
-    container_name: c-style-portfolio
+    image: root-co:latest
+    container_name: root-co
     ports:
       - "8080:80"
     restart: unless-stopped

@@ -12,7 +12,7 @@ export default function BenefitsBar() {
   return (
     <section id="benefits" aria-labelledby="benefits-title" className="border-b border-line bg-white">
       <h2 id="benefits-title" className="sr-only">
-        Why shop with C-STYLE
+        Why shop with ROOT.CO
       </h2>
       <ul className="shell grid grid-cols-2 border-line md:grid-cols-4">
         {benefits.map((benefit, index) => {

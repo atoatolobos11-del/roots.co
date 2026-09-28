@@ -1,4 +1,4 @@
-# C-STYLE — Modern Fashion E-Commerce UI
+# ROOT.CO — Modern Fashion E-Commerce UI
 
 A responsive fashion e-commerce interface built with **React**, **Node.js** and **Tailwind CSS**,
 created as a portfolio project. It features reusable product components, category filtering,
@@ -50,7 +50,7 @@ Reusable component classes live in `src/index.css`: `.shell`, `.label`, `.label-
 ## Project structure
 
 ```
-c-style-portfolio/
+root-co/
 ├── public/
 │   ├── fonts/                 # Self-hosted Inter (latin + latin-ext)
 │   ├── images/                # Original generated artwork
@@ -138,7 +138,7 @@ c-style-portfolio/
 ## SEO
 
 Title, description, canonical, Open Graph and Twitter card metadata in `index.html`; semantic
-headings; descriptive alt text. **Before deploying**, replace the `https://c-style.example.com`
+headings; descriptive alt text. **Before deploying**, replace the `https://octocat.github.io/`
 canonical/`og:url` with your real domain.
 
 ---
@@ -166,9 +166,9 @@ caching for hashed assets and fonts, and SPA fallback. Vercel ignores the Docker
 ```bash
 git init
 git add .
-git commit -m "feat: initial C-STYLE portfolio"
+git commit -m "feat: initial ROOT.CO portfolio"
 git branch -M main
-git remote add origin https://github.com/<user>/c-style-portfolio.git
+git remote add origin https://github.com/<user>/root-co.git
 git push -u origin main
 ```
 

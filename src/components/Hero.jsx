@@ -8,7 +8,7 @@ export default function Hero() {
         <source media="(max-width: 767px)" srcSet="/images/hero/hero-mobile.svg" />
         <img
           src="/images/hero/hero-desktop.svg"
-          alt="Two C-STYLE models in neutral tailoring on a studio backdrop"
+          alt="Two ROOT.CO models in neutral tailoring on a studio backdrop"
           width="2000"
           height="1250"
           fetchPriority="high"
@@ -36,7 +36,7 @@ export default function Hero() {
             confidence
           </h1>
           <p className="mt-5 max-w-sm text-[13px] leading-relaxed text-white/75 sm:text-sm">
-            C-STYLE has everything you need to look and feel your best — considered neutrals,
+            ROOT.CO has everything you need to look and feel your best — considered neutrals,
             everyday essentials and new-season tailoring.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">

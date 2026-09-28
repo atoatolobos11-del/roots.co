@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Single-page marketing site - nothing here is private or paginated.
+Sitemap: https://root.co/sitemap.xml
