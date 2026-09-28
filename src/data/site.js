@@ -13,8 +13,8 @@ export const announcementMessages = [
 /** Main navigation (PRD §4.2). `filter` maps onto the product grid. */
 export const navLinks = [
   { label: 'New In', href: '#new-arrivals', filter: 'all' },
-  { label: 'Women', href: '#new-arrivals', filter: 'tops' },
-  { label: 'Men', href: '#new-arrivals', filter: 'men' },
+  { label: 'Tops', href: '#new-arrivals', filter: 'tops' },
+  { label: 'Tailoring', href: '#new-arrivals', filter: 'tailoring' },
   { label: 'Shoes', href: '#new-arrivals', filter: 'shoes' },
   { label: 'Accessories', href: '#new-arrivals', filter: 'accessories' },
   { label: 'Sale', href: '#new-arrivals', filter: 'sale', accent: true },
@@ -37,8 +37,8 @@ export const promos = [
   {
     id: 'student',
     variant: 'dark',
-    image: '/images/banners/student.svg',
-    alt: 'Student wearing a ROOT.CO coat in a studio',
+    image: '/images/photos/banner-satchel.jpg',
+    alt: 'Worn brown leather satchel bag resting on a stone bench',
     kicker: 'Student Discount',
     title: ['Students get', '10% off'],
     text: 'Verify with your student email and take 10% off your first order.',
@@ -48,8 +48,8 @@ export const promos = [
   {
     id: 'new-season',
     variant: 'light',
-    image: '/images/banners/new-season.svg',
-    alt: 'Model wearing the new season linen dress',
+    image: '/images/photos/banner-puffer.jpg',
+    alt: 'Rust coloured quilted puffer jacket on a white mannequin',
     kicker: 'Autumn / Winter',
     title: ['New season', 'new look'],
     text: 'Relaxed tailoring and warm neutrals, restated for the season ahead.',
@@ -59,8 +59,8 @@ export const promos = [
   {
     id: 'store',
     variant: 'image',
-    image: '/images/banners/store.svg',
-    alt: 'ROOT.CO store interior with a window display',
+    image: '/images/photos/banner-tote.jpg',
+    alt: 'Black structured leather tote photographed on a white studio background',
     kicker: 'Visit Us',
     title: ['Visit us', 'in store'],
     text: 'Find a ROOT.CO store near you.',
@@ -99,8 +99,9 @@ export const footerColumns = [
     title: 'Shop',
     links: [
       { label: 'New In', href: '#new-arrivals' },
-      { label: 'Women', href: '#new-arrivals', filter: 'tops' },
-      { label: 'Men', href: '#new-arrivals', filter: 'men' },
+      { label: 'Tops', href: '#new-arrivals', filter: 'tops' },
+      { label: 'Tailoring', href: '#new-arrivals', filter: 'tailoring' },
+      { label: 'Outerwear', href: '#new-arrivals', filter: 'outerwear' },
       { label: 'Shoes', href: '#new-arrivals', filter: 'shoes' },
       { label: 'Accessories', href: '#new-arrivals', filter: 'accessories' },
       { label: 'Sale', href: '#new-arrivals', filter: 'sale' },

@@ -74,34 +74,36 @@ function writePng(file, width, height, rgba) {
 /* Palette                                                             */
 /* ------------------------------------------------------------------ */
 
+// Warm tonal palette, matched to the catalogue photography (cream, camel, tan
+// leather, denim) so the remaining generated art sits with the photographs.
 const CLOTH = [
-  ['#2C2C2A', '#3E3E3B'],
-  ['#8C8C7A', '#9C9C89'],
-  ['#D8D3C7', '#E3DED3'],
+  ['#2B2622', '#3D3630'],
+  ['#A98A62', '#B99C78'],
+  ['#DDD5C7', '#E8E1D5'],
   ['#B4553A', '#C3624A'],
-  ['#5F6B5C', '#6E7A6B'],
-  ['#2F3A42', '#3A4750'],
-  ['#EFE9E1', '#F6F2EC'],
-  ['#6E6259', '#7C6F65'],
-  ['#A9A396', '#B5AF9F'],
-  ['#4A4A48', '#585855'],
-  ['#C9C2B4', '#D5CEBF'],
-  ['#7A5C48', '#8B6A53'],
-  ['#3B3B39', '#4B4B48'],
-  ['#1E1E1D', '#2A2A28'],
+  ['#6E7A5C', '#7E8A6B'],
+  ['#3E4A5C', '#4C586A'],
+  ['#F2ECE2', '#F8F4EC'],
+  ['#7A6C5C', '#8A7C6C'],
+  ['#B0A793', '#BFB7A4'],
+  ['#4A443C', '#5A534A'],
+  ['#C9BBA6', '#D5C9B6'],
+  ['#8B6A45', '#9C7C57'],
+  ['#3B3630', '#4B453D'],
+  ['#241F1B', '#322C26'],
 ]
 const BACKDROPS = [
-  ['#F2F0EB', '#E2DFD7'],
-  ['#E9E6E0', '#D7D3CA'],
-  ['#DEDAD1', '#C9C5BA'],
-  ['#F6F5F2', '#E8E6E1'],
-  ['#D3CFC5', '#BEB9AE'],
-  ['#CFCBC2', '#B5B0A5'],
-  ['#E4E1D9', '#D0CCC2'],
-  ['#EDEBE5', '#DAD6CD'],
+  ['#F4F1EA', '#E4DFD3'],
+  ['#EBE6DC', '#D9D2C4'],
+  ['#E0DACE', '#CAC1B1'],
+  ['#F7F5F0', '#EAE5DA'],
+  ['#D5CFC2', '#C0B8A8'],
+  ['#D1CBC0', '#B7AF9F'],
+  ['#E6E2D8', '#D2CBBB'],
+  ['#EFECE4', '#DCD6C8'],
 ]
 /** Backdrop for cards that need to read as a dark, editorial treatment. */
-const DARK_BACKDROP = ['#3A3A38', '#141413']
+const DARK_BACKDROP = ['#3A322B', '#16120F']
 
 /* ------------------------------------------------------------------ */
 /* SVG helpers                                                         */
@@ -111,7 +113,7 @@ let uid = 0
 
 /** Lighting values for a card, normal or dark. */
 const LIGHT = {
-  light: { keyInk: '#ffffff', keyTop: 0.5, keyMid: 0.1, vigInk: '#111111', vigMax: 0.09 },
+  light: { keyInk: '#ffffff', keyTop: 0.5, keyMid: 0.1, vigInk: '#1C1917', vigMax: 0.09 },
   dark: { keyInk: '#ffffff', keyTop: 0.14, keyMid: 0.03, vigInk: '#000000', vigMax: 0.55 },
 }
 
@@ -175,7 +177,7 @@ function save(rel, w, h, inner) {
 }
 
 const shadow = (cx, cy, rx, ry, op = 0.16) =>
-  `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#111111" opacity="${op}"/>`
+  `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#1C1917" opacity="${op}"/>`
 
 /**
  * The box every garment silhouette occupies in its native 800 x 1000 frame.
@@ -606,14 +608,14 @@ for (const [slug, art, i] of CATEGORIES) {
 
 // — sale tile (darker treatment)
 save('categories/sale.svg', 480, 480, {
-  bg: ['#222222', '#111111'],
+  bg: ['#332E2A', '#1C1917'],
   cloth: ['#3A3A38', '#4A4A48'],
-  art: `<g fill="none" stroke="#DCDCD8" stroke-width="6" opacity="0.5">
+  art: `<g fill="none" stroke="#DDD5C7" stroke-width="6" opacity="0.5">
       <path d="M40 40h90v90H40z"/>
     </g>
-    <text x="240" y="212" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="600" letter-spacing="4" fill="#F7F7F5">−50%</text>
-    <rect x="150" y="258" width="180" height="2" fill="#DCDCD8" opacity="0.6"/>
-    <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DCDCD8" opacity="0.85">SALE</text>`,
+    <text x="240" y="212" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="600" letter-spacing="4" fill="#F8F5EF">−50%</text>
+    <rect x="150" y="258" width="180" height="2" fill="#DDD5C7" opacity="0.6"/>
+    <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DDD5C7" opacity="0.85">SALE</text>`,
 })
 
 // — collection cards: a garment presented in a studio niche, like a shop
@@ -680,7 +682,7 @@ for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
   })
 
   save('banners/new-season.svg', w, h, {
-    bg: ['#F7F7F5', '#E8E8E5'],
+    bg: ['#F8F5EF', '#EDE7DC'],
     cloth: CLOTH[3],
     art: garmentInFrame(GARMENTS.dress(CLOTH[3]), w * 0.66, h * 0.9, h * 0.68),
   })
@@ -692,32 +694,32 @@ for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
     bg: ['#EFEDE8', '#D6D2C9'],
     cloth: CLOTH[5],
     art: `
-    <rect x="0" y="742" width="1200" height="158" fill="#111111" opacity="0.06"/>
-    <rect x="0" y="742" width="1200" height="2" fill="#111111" opacity="0.1"/>
-    <rect x="96" y="150" width="1008" height="594" fill="#111111" opacity="0.07"/>
-    <rect x="112" y="166" width="976" height="578" fill="#F7F7F5" opacity="0.8"/>
-    <rect x="112" y="166" width="976" height="96" fill="#111111" opacity="0.9"/>
-    <text x="600" y="228" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="14" fill="#F7F7F5">ROOT.CO</text>
-    <path fill="#111111" opacity="0.12" d="M112 262h976l40 96H72z"/>
-    ${Array.from({ length: 11 }, (_, i) => `<rect x="${80 + i * 96}" y="358" width="48" height="96" fill="#F7F7F5" opacity="${i % 2 ? 0.85 : 0.6}"/>`).join('')}
-    <path fill="#111111" opacity="0.14" d="M72 454h1056l-10 26H82z"/>
-    <rect x="150" y="486" width="560" height="258" fill="#8C8C7A" opacity="0.28"/>
+    <rect x="0" y="742" width="1200" height="158" fill="#1C1917" opacity="0.06"/>
+    <rect x="0" y="742" width="1200" height="2" fill="#1C1917" opacity="0.1"/>
+    <rect x="96" y="150" width="1008" height="594" fill="#1C1917" opacity="0.07"/>
+    <rect x="112" y="166" width="976" height="578" fill="#F8F5EF" opacity="0.8"/>
+    <rect x="112" y="166" width="976" height="96" fill="#1C1917" opacity="0.9"/>
+    <text x="600" y="228" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="14" fill="#F8F5EF">ROOT.CO</text>
+    <path fill="#1C1917" opacity="0.12" d="M112 262h976l40 96H72z"/>
+    ${Array.from({ length: 11 }, (_, i) => `<rect x="${80 + i * 96}" y="358" width="48" height="96" fill="#F8F5EF" opacity="${i % 2 ? 0.85 : 0.6}"/>`).join('')}
+    <path fill="#1C1917" opacity="0.14" d="M72 454h1056l-10 26H82z"/>
+    <rect x="150" y="486" width="560" height="258" fill="#A98A62" opacity="0.28"/>
     <path fill="#ffffff" opacity="0.2" d="M150 486h360l-360 258z"/>
-    <rect x="150" y="486" width="560" height="258" fill="none" stroke="#111111" stroke-width="6" opacity="0.16"/>
-    <rect x="186" y="556" width="488" height="4" fill="#111111" opacity="0.28"/>
+    <rect x="150" y="486" width="560" height="258" fill="none" stroke="#1C1917" stroke-width="6" opacity="0.16"/>
+    <rect x="186" y="556" width="488" height="4" fill="#1C1917" opacity="0.28"/>
     ${[0, 1, 2, 3]
       .map(
         (i) => `<g opacity="${0.85 - i * 0.12}">
-          <path fill="none" stroke="#111111" stroke-width="3" d="M${232 + i * 122} 556v22"/>
-          <path fill="#8C8C7A" d="M${208 + i * 122} 646l24-52 24 52z"/>
-          <path fill="none" stroke="#111111" stroke-width="2.5" opacity="0.5" d="M${200 + i * 122} 646h64"/>
+          <path fill="none" stroke="#1C1917" stroke-width="3" d="M${232 + i * 122} 556v22"/>
+          <path fill="#A98A62" d="M${208 + i * 122} 646l24-52 24 52z"/>
+          <path fill="none" stroke="#1C1917" stroke-width="2.5" opacity="0.5" d="M${200 + i * 122} 646h64"/>
         </g>`,
       )
       .join('')}
-    <rect x="758" y="486" width="292" height="258" fill="#111111" opacity="0.1"/>
-    <rect x="778" y="506" width="252" height="238" fill="#F7F7F5" opacity="0.5"/>
-    <rect x="1006" y="606" width="8" height="34" fill="#111111" opacity="0.45"/>
-    <rect x="92" y="628" width="112" height="114" rx="8" fill="#111111" opacity="0.16"/>
+    <rect x="758" y="486" width="292" height="258" fill="#1C1917" opacity="0.1"/>
+    <rect x="778" y="506" width="252" height="238" fill="#F8F5EF" opacity="0.5"/>
+    <rect x="1006" y="606" width="8" height="34" fill="#1C1917" opacity="0.45"/>
+    <rect x="92" y="628" width="112" height="114" rx="8" fill="#1C1917" opacity="0.16"/>
     <path fill="#5F6B5C" d="M148 640c-8-64-4-114 0-136 6 26 8 92 0 136z"/>
     <path fill="#5F6B5C" opacity="0.85" d="M148 596c-44-18-76-50-82-96 38 12 74 44 82 96z"/>
     <path fill="#5F6B5C" opacity="0.7" d="M148 610c42-16 74-46 80-90-36 10-72 40-80 90z"/>`,
@@ -785,7 +787,7 @@ for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
 // — favicon
 writeFileSync(
   join(ROOT, 'public', 'favicon.svg'),
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><rect width="64" height="64" rx="10" fill="#111111"/><path fill="none" stroke="#F7F7F5" stroke-width="6" stroke-linecap="square" d="M44 22a18 18 0 1 0 0 20"/></svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><rect width="64" height="64" rx="10" fill="#1C1917"/><path fill="none" stroke="#F8F5EF" stroke-width="6" stroke-linecap="square" d="M44 22a18 18 0 1 0 0 20"/></svg>`,
 )
 
 console.log('✓ original assets written to public/images')

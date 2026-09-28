@@ -11,7 +11,8 @@
     "test:smoke": "node scripts/smoke.mjs",
     "generate:assets": "node scripts/generate-assets.mjs",
     "set:url": "node scripts/set-site-url.mjs",
-    "check:url": "node scripts/check-site-url.mjs"
+    "check:url": "node scripts/check-site-url.mjs",
+    "fetch:photos": "node scripts/fetch-photos.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.48.0",
@@ -25,6 +26,7 @@
     "autoprefixer": "^10.6.1",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.28",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.17",
     "vite": "^8.3.0"
   }

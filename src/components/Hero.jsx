@@ -5,12 +5,12 @@ export default function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden bg-off">
       <picture>
-        <source media="(max-width: 767px)" srcSet="/images/hero/hero-mobile.svg" />
+        <source media="(max-width: 767px)" srcSet="/images/photos/hero-rail.jpg" />
         <img
-          src="/images/hero/hero-desktop.svg"
-          alt="Two ROOT.CO models in neutral tailoring on a studio backdrop"
+          src="/images/photos/hero-rail.jpg"
+          alt="Rail of cream and camel wool coats hanging in a ROOT.CO store"
           width="2000"
-          height="1250"
+          height="1125"
           fetchPriority="high"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-center"

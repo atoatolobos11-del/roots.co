@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" preserveAspectRatio="xMidYMid slice" role="img"><defs>
     <linearGradient id="bga35" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#222222"/>
-      <stop offset="1" stop-color="#111111"/>
+      <stop offset="0" stop-color="#332E2A"/>
+      <stop offset="1" stop-color="#1C1917"/>
     </linearGradient>
     <!-- Soft light from above. A centred radial highlight read as a visible
          white blob on flat product backgrounds, so the key light is a vertical
@@ -13,8 +13,8 @@
       <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
     <radialGradient id="viga35" cx="0.5" cy="0.42" r="0.78">
-      <stop offset="0.55" stop-color="#111111" stop-opacity="0"/>
-      <stop offset="1" stop-color="#111111" stop-opacity="0.09"/>
+      <stop offset="0.55" stop-color="#1C1917" stop-opacity="0"/>
+      <stop offset="1" stop-color="#1C1917" stop-opacity="0.09"/>
     </radialGradient>
     <linearGradient id="faba35" x1="0.12" y1="0" x2="0.88" y2="1">
       <stop offset="0" stop-color="#4A4A48"/>
@@ -35,11 +35,11 @@
     </filter>
   </defs><g id="art"><rect width="480" height="480" fill="url(#bga35)"/>
   <rect width="480" height="480" fill="url(#keya35)"/>
-  <g fill="none" stroke="#DCDCD8" stroke-width="6" opacity="0.5">
+  <g fill="none" stroke="#DDD5C7" stroke-width="6" opacity="0.5">
       <path d="M40 40h90v90H40z"/>
     </g>
-    <text x="240" y="212" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="600" letter-spacing="4" fill="#F7F7F5">−50%</text>
-    <rect x="150" y="258" width="180" height="2" fill="#DCDCD8" opacity="0.6"/>
-    <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DCDCD8" opacity="0.85">SALE</text>
+    <text x="240" y="212" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="600" letter-spacing="4" fill="#F8F5EF">−50%</text>
+    <rect x="150" y="258" width="180" height="2" fill="#DDD5C7" opacity="0.6"/>
+    <text x="240" y="308" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" letter-spacing="8" fill="#DDD5C7" opacity="0.85">SALE</text>
   <rect width="480" height="480" fill="url(#viga35)"/>
   <rect width="480" height="480" filter="url(#graina35)" opacity="0.05"/></g></svg>

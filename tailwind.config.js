@@ -3,14 +3,16 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      // Warm tonal palette, warmed to sit with the catalogue photography:
+      // cream, camel, tan leather and denim rather than the previous cool greys.
       colors: {
-        ink: '#111111',
-        soft: '#222222',
-        off: '#F7F7F5',
-        mist: '#E8E8E5',
-        ash: '#777777',
-        line: '#DCDCD8',
-        accent: '#8C8C7A',
+        ink: '#1C1917', // near-black espresso
+        soft: '#332E2A', // deep brown-black
+        off: '#F8F5EF', // warm off-white
+        mist: '#EDE7DC', // sand
+        ash: '#7A7267', // warm grey
+        line: '#DDD5C7', // warm border
+        accent: '#A98A62', // camel
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],

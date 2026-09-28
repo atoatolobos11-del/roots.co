@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" preserveAspectRatio="xMidYMid slice" role="img"><defs>
     <linearGradient id="bga18" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#F6F5F2"/>
-      <stop offset="1" stop-color="#E8E6E1"/>
+      <stop offset="0" stop-color="#F7F5F0"/>
+      <stop offset="1" stop-color="#EAE5DA"/>
     </linearGradient>
     <!-- Soft light from above. A centred radial highlight read as a visible
          white blob on flat product backgrounds, so the key light is a vertical
@@ -13,20 +13,20 @@
       <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
     <radialGradient id="viga18" cx="0.5" cy="0.42" r="0.78">
-      <stop offset="0.55" stop-color="#111111" stop-opacity="0"/>
-      <stop offset="1" stop-color="#111111" stop-opacity="0.09"/>
+      <stop offset="0.55" stop-color="#1C1917" stop-opacity="0"/>
+      <stop offset="1" stop-color="#1C1917" stop-opacity="0.09"/>
     </radialGradient>
     <linearGradient id="faba18" x1="0.12" y1="0" x2="0.88" y2="1">
-      <stop offset="0" stop-color="#2A2A28"/>
-      <stop offset="0.55" stop-color="#1E1E1D"/>
-      <stop offset="1" stop-color="#1E1E1D"/>
+      <stop offset="0" stop-color="#322C26"/>
+      <stop offset="0.55" stop-color="#241F1B"/>
+      <stop offset="1" stop-color="#241F1B"/>
     </linearGradient>
     <!-- Figures live in a 300-wide local space, so they need their own gradient
          keyed to the figure clip id rather than the 800-wide product one. -->
     <linearGradient id="figFIG" x1="0.1" y1="0" x2="0.9" y2="1">
-      <stop offset="0" stop-color="#2A2A28"/>
-      <stop offset="0.6" stop-color="#1E1E1D"/>
-      <stop offset="1" stop-color="#1E1E1D"/>
+      <stop offset="0" stop-color="#322C26"/>
+      <stop offset="0.6" stop-color="#241F1B"/>
+      <stop offset="1" stop-color="#241F1B"/>
     </linearGradient>
     <filter id="graina18" x="0" y="0" width="100%" height="100%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
@@ -36,13 +36,13 @@
   </defs><g id="art"><rect width="800" height="1000" fill="url(#bga18)"/>
   <rect width="800" height="1000" fill="url(#keya18)"/>
   
-    <ellipse cx="420" cy="712" rx="224" ry="20" fill="#111111" opacity="0.16"/>
-    <path fill="#1E1E1D" d="M206 592c0-56 26-98 72-120 30-14 62-18 96-14 24 3 44 12 60 28l30 32c24 26 58 44 100 54 40 10 66 28 72 52 4 18-8 34-32 42-32 11-76 16-134 16H242c-22 0-36-12-36-30z"/>
-    <path fill="#2A2A28" d="M190 640c0-8 6-14 16-14h412c14 0 22 8 20 18-4 18-26 30-62 30H232c-26 0-42-12-42-34z"/>
-    <path fill="#1E1E1D" d="M300 500c24-14 52-20 82-18l-14 66c-26-4-52-16-74-32z"/>
-    <ellipse cx="354" cy="508" rx="36" ry="13" fill="#2A2A28" opacity="0.5"/>
-    <path fill="none" stroke="#2A2A28" stroke-width="9" stroke-linecap="round" opacity="0.9" d="M334 550h92"/>
-    <path fill="#1E1E1D" d="M596 564c30 6 52 16 66 30 10 10 12 20 6 30-8 12-28 18-60 18-14 0-22-6-22-18 0-22 4-42 10-60z"/>
-    <path fill="none" stroke="#2A2A28" stroke-width="3" opacity="0.4" d="M258 678h296"/>
+    <ellipse cx="420" cy="712" rx="224" ry="20" fill="#1C1917" opacity="0.16"/>
+    <path fill="#241F1B" d="M206 592c0-56 26-98 72-120 30-14 62-18 96-14 24 3 44 12 60 28l30 32c24 26 58 44 100 54 40 10 66 28 72 52 4 18-8 34-32 42-32 11-76 16-134 16H242c-22 0-36-12-36-30z"/>
+    <path fill="#322C26" d="M190 640c0-8 6-14 16-14h412c14 0 22 8 20 18-4 18-26 30-62 30H232c-26 0-42-12-42-34z"/>
+    <path fill="#241F1B" d="M300 500c24-14 52-20 82-18l-14 66c-26-4-52-16-74-32z"/>
+    <ellipse cx="354" cy="508" rx="36" ry="13" fill="#322C26" opacity="0.5"/>
+    <path fill="none" stroke="#322C26" stroke-width="9" stroke-linecap="round" opacity="0.9" d="M334 550h92"/>
+    <path fill="#241F1B" d="M596 564c30 6 52 16 66 30 10 10 12 20 6 30-8 12-28 18-60 18-14 0-22-6-22-18 0-22 4-42 10-60z"/>
+    <path fill="none" stroke="#322C26" stroke-width="3" opacity="0.4" d="M258 678h296"/>
   <rect width="800" height="1000" fill="url(#viga18)"/>
   <rect width="800" height="1000" filter="url(#graina18)" opacity="0.05"/></g></svg>

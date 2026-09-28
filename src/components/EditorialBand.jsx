@@ -44,19 +44,19 @@ export default function EditorialBand() {
 
         <div className="grid grid-cols-5 gap-3 sm:gap-4">
           <img
-            src="/images/collections/minimal-essentials.svg"
-            alt="Model in a crisp cotton shirt from the Minimal Essentials collection"
-            width="900"
-            height="1200"
+            src="/images/photos/collection-dresses.jpg"
+            alt="White tiered linen dresses hanging on a rail"
+            width="1350"
+            height="900"
             loading="lazy"
             decoding="async"
             className="col-span-3 aspect-[3/4] w-full rounded-xl bg-mist object-cover"
           />
           <img
-            src="/images/collections/workwear.svg"
-            alt="Model in a long wool coat from the Workwear collection"
-            width="900"
-            height="1200"
+            src="/images/photos/collection-knitwear.jpg"
+            alt="Folded grey merino knitwear beside a pair of brown leather shoes"
+            width="1350"
+            height="900"
             loading="lazy"
             decoding="async"
             className="col-span-2 mt-8 aspect-[3/4] w-full rounded-xl bg-mist object-cover sm:mt-12"

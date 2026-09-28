@@ -1,38 +1,43 @@
-/** Editorial collections rail (PRD §12). */
+/**
+ * Editorial collections rail (PRD §12).
+ *
+ * Names and descriptions are written to match the photograph shown on each
+ * card, since the photography is sourced rather than art-directed to a brief.
+ */
 export const collections = [
   {
-    id: 'date-night',
-    name: 'Date Night',
-    description: 'Soft tailoring, low light, late dinners.',
-    image: '/images/collections/date-night.svg',
-    alt: 'Model in a long dress from the Date Night collection',
+    id: 'tailoring',
+    name: 'Tailoring',
+    description: 'Checked suiting and pressed creases.',
+    image: '/images/photos/collection-tailoring.jpg',
+    alt: 'Brown checked three-piece suit displayed on a white mannequin',
   },
   {
-    id: 'weekend-edit',
-    name: 'Weekend Edit',
-    description: 'Easy layers for days without a plan.',
-    image: '/images/collections/weekend-edit.svg',
-    alt: 'Model in relaxed separates from the Weekend Edit collection',
+    id: 'dresses',
+    name: 'Dresses',
+    description: 'Feather-light linen, tiered seams.',
+    image: '/images/photos/collection-dresses.jpg',
+    alt: 'White tiered linen dresses hanging on a rail',
   },
   {
-    id: 'workwear',
-    name: 'Workwear',
-    description: 'Quiet pieces that read as sharp.',
-    image: '/images/collections/workwear.svg',
-    alt: 'Model in a long coat from the Workwear collection',
+    id: 'knitwear',
+    name: 'Knitwear',
+    description: 'Merino in blush and rose.',
+    image: '/images/photos/collection-knitwear.jpg',
+    alt: 'Folded grey merino knitwear beside a pair of brown leather shoes',
   },
   {
-    id: 'street-style',
-    name: 'Street Style',
-    description: 'Sneakers, oversized fits, clean lines.',
-    image: '/images/collections/street-style.svg',
-    alt: 'Model in an oversized look from the Street Style collection',
+    id: 'footwear',
+    name: 'Footwear',
+    description: 'Brogues, derbies and clean white leather.',
+    image: '/images/photos/collection-shoes.jpg',
+    alt: 'Pair of tan leather brogue shoes beside a polka dot shirt',
   },
   {
-    id: 'minimal-essentials',
-    name: 'Minimal Essentials',
-    description: 'The neutral base your wardrobe builds on.',
-    image: '/images/collections/minimal-essentials.svg',
-    alt: 'Model in a crisp shirt from the Minimal Essentials collection',
+    id: 'denim',
+    name: 'Denim',
+    description: 'Straight and tapered, rigid selvedge.',
+    image: '/images/photos/collection-denim.jpg',
+    alt: 'Person wearing straight leg blue jeans with brown leather boots',
   },
 ]

@@ -5,17 +5,17 @@ import { products, SALE_CATEGORY } from './products.js'
  * to read as a promotional entry point.
  */
 export const categories = [
-  { id: 'tops', name: 'Tops', image: '/images/categories/tops.svg', alt: 'Tops category' },
-  { id: 'bottoms', name: 'Bottoms', image: '/images/categories/bottoms.svg', alt: 'Bottoms category' },
-  { id: 'dresses', name: 'Dresses', image: '/images/categories/dresses.svg', alt: 'Dresses category' },
-  { id: 'shoes', name: 'Shoes', image: '/images/categories/shoes.svg', alt: 'Shoes category' },
+  { id: 'tops', name: 'Tops', image: '/images/photos/poplin-shirt-rail.jpg', alt: 'Shirts in cream and sand hanging on a rail' },
+  { id: 'bottoms', name: 'Bottoms', image: '/images/photos/collection-denim.jpg', alt: 'Straight leg blue jeans with brown leather boots' },
+  { id: 'dresses', name: 'Dresses', image: '/images/photos/collection-dresses.jpg', alt: 'White tiered linen dresses hanging on a rail' },
+  { id: 'shoes', name: 'Shoes', image: '/images/photos/collection-shoes.jpg', alt: 'Pair of tan leather brogue shoes' },
   {
     id: 'accessories',
     name: 'Accessories',
-    image: '/images/categories/accessories.svg',
-    alt: 'Accessories category',
+    image: '/images/photos/structured-leather-tote.jpg',
+    alt: 'Black structured leather tote bag',
   },
-  { id: 'men', name: 'Men', image: '/images/categories/men.svg', alt: 'Men category' },
+  { id: 'men', name: 'Men', image: '/images/photos/collection-tailoring.jpg', alt: 'Brown checked three-piece suit on a mannequin' },
   { id: SALE_CATEGORY.toLowerCase(), name: SALE_CATEGORY, image: '/images/categories/sale.svg', alt: 'Sale' },
 ]
 
@@ -27,7 +27,8 @@ export const filters = [
   { id: 'dresses', name: 'Dresses' },
   { id: 'shoes', name: 'Shoes' },
   { id: 'accessories', name: 'Accessories' },
-  { id: 'men', name: 'Men' },
+  { id: 'tailoring', name: 'Tailoring' },
+  { id: 'outerwear', name: 'Outerwear' },
   { id: SALE_CATEGORY.toLowerCase(), name: SALE_CATEGORY },
 ]
 

@@ -177,10 +177,16 @@ a **Newsletter** block with an email input and a `SUBSCRIBE` button.
 
 ## 18. Visual Design System
 
-`#111111` primary black · `#222222` soft black · `#FFFFFF` white · `#F7F7F5` off white ·
-`#E8E8E5` light gray · `#777777` medium gray · `#DCDCD8` border gray · `#8C8C7A` accent.
+The reference palette was cool: `#111111` primary black · `#222222` soft black · `#FFFFFF` white ·
+`#F7F7F5` off white · `#E8E8E5` light gray · `#777777` medium gray · `#DCDCD8` border gray ·
+`#8C8C7A` accent.
 
-The page stays primarily black, white, gray and neutral; accent colour is used sparingly.
+**Shipped palette is warm** to sit with the CC0 catalogue photography, which is cream, camel, tan
+leather and denim: `#1C1917` espresso · `#332E2A` soft brown-black · `#FFFFFF` white ·
+`#F8F5EF` warm off white · `#EDE7DC` sand · `#7A7267` warm gray · `#DDD5C7` border ·
+`#A98A62` camel accent.
+
+The page stays primarily black, white, sand and neutral; accent colour is used sparingly.
 
 ## 19. Typography
 
