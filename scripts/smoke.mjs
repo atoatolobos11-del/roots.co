@@ -27,6 +27,7 @@ const checks = [
   { file: '/src/components/Hero.jsx', name: 'Hero' },
   { file: '/src/components/CartDrawer.jsx', name: 'CartDrawer' },
   { file: '/src/components/SearchOverlay.jsx', name: 'SearchOverlay' },
+  { file: '/src/components/AccountModal.jsx', name: 'AccountModal' },
   { file: '/src/components/ChatWidget.jsx', name: 'ChatWidget' },
   { file: '/src/components/Footer.jsx', name: 'Footer' },
   { file: '/src/pages/Home.jsx', name: 'Home' },
@@ -37,21 +38,26 @@ async function renderWithProviders(file) {
   const [{ default: Component }, providers] = await Promise.all([
     server.ssrLoadModule(file),
     Promise.all([
+      server.ssrLoadModule('/src/context/AuthContext.jsx'),
       server.ssrLoadModule('/src/context/WishlistContext.jsx'),
       server.ssrLoadModule('/src/context/CartContext.jsx'),
       server.ssrLoadModule('/src/context/ShopContext.jsx'),
     ]),
   ])
 
-  const [{ WishlistProvider }, { CartProvider }, { ShopProvider }] = providers
+  const [{ AuthProvider }, { WishlistProvider }, { CartProvider }, { ShopProvider }] = providers
   return renderToString(
     createElement(
-      WishlistProvider,
+      AuthProvider,
       null,
       createElement(
-        CartProvider,
+        WishlistProvider,
         null,
-        createElement(ShopProvider, null, createElement(Component, { open: false })),
+        createElement(
+          CartProvider,
+          null,
+          createElement(ShopProvider, null, createElement(Component, { open: false })),
+        ),
       ),
     ),
   )

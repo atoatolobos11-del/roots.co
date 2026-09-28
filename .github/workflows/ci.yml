@@ -38,6 +38,14 @@ jobs:
       - name: Smoke test
         run: npm run test:smoke
 
+      - name: Account dialog a11y and validation
+        run: npm run test:account
+
+      - name: Account flow in a real browser
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:account:flow
+
       - name: Verify the production URL is stamped
         # index.html, robots.txt and sitemap.xml must all agree on the host,
         # otherwise search engines index a placeholder domain. Run

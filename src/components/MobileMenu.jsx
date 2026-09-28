@@ -6,6 +6,7 @@ import { useOverlay } from '../hooks/useOverlay.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
 import { useShop } from '../context/ShopContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { cn } from '../lib/utils.js'
 
 const quickLinks = [
@@ -16,11 +17,12 @@ const quickLinks = [
 ]
 
 /** Slide-in navigation drawer for small screens (PRD §4.2). */
-export default function MobileMenu({ open, onClose, onNavigate }) {
+export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount }) {
   const panelRef = useRef(null)
   const { openCart, count } = useCart()
   const wishlist = useWishlist()
   const { openSearch, activeFilter } = useShop()
+  const { user } = useAuth()
 
   useOverlay(open, panelRef, onClose)
 
@@ -120,8 +122,9 @@ export default function MobileMenu({ open, onClose, onNavigate }) {
             <DrawerAction>
               <Heart size={17} strokeWidth={1.5} /> Saved ({wishlist.count})
             </DrawerAction>
-            <DrawerAction>
-              <User size={17} strokeWidth={1.5} /> Account
+            <DrawerAction onClick={onOpenAccount}>
+              <User size={17} strokeWidth={1.5} className={cn(user && 'fill-ink')} />
+              {user ? 'Account' : 'Sign in'}
             </DrawerAction>
           </div>
         </div>

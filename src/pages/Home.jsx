@@ -14,6 +14,7 @@ import CartDrawer from '../components/CartDrawer.jsx'
 import { CartProvider } from '../context/CartContext.jsx'
 import { WishlistProvider } from '../context/WishlistContext.jsx'
 import { ShopProvider } from '../context/ShopContext.jsx'
+import { AuthProvider } from '../context/AuthContext.jsx'
 
 /**
  * Homepage composition, following the reference hierarchy in PRD §3:
@@ -22,36 +23,38 @@ import { ShopProvider } from '../context/ShopContext.jsx'
  */
 export default function Home() {
   return (
-    <WishlistProvider>
-      <CartProvider>
-        <ShopProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-ink focus:px-4 focus:py-2 focus:text-[11px] focus:font-semibold focus:uppercase focus:tracking-label focus:text-white"
-          >
-            Skip to content
-          </a>
+    <AuthProvider>
+      <WishlistProvider>
+        <CartProvider>
+            <ShopProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-ink focus:px-4 focus:py-2 focus:text-[11px] focus:font-semibold focus:uppercase focus:tracking-label focus:text-white"
+            >
+              Skip to content
+            </a>
 
-          <AnnouncementBar />
-          <Header />
+            <AnnouncementBar />
+            <Header />
 
-          <main id="main">
-            <Hero />
-            <BenefitsBar />
-            <CategorySection />
-            <ProductSection />
-            <PromoSection />
-            <CollectionSection />
-            <EditorialBand />
-          </main>
+            <main id="main">
+              <Hero />
+              <BenefitsBar />
+              <CategorySection />
+              <ProductSection />
+              <PromoSection />
+              <CollectionSection />
+              <EditorialBand />
+            </main>
 
-          <Footer />
+            <Footer />
 
-          <ChatWidget />
-          <BackToTop />
-          <CartDrawer />
-        </ShopProvider>
-      </CartProvider>
-    </WishlistProvider>
+            <ChatWidget />
+            <BackToTop />
+            <CartDrawer />
+          </ShopProvider>
+        </CartProvider>
+      </WishlistProvider>
+    </AuthProvider>
   )
 }

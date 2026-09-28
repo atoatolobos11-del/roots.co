@@ -25,6 +25,8 @@ npm run dev        # http://localhost:5173
 | `npm run preview`         | Serves the production build locally                      |
 | `npm run lint`            | oxlint over `src/` and `scripts/`                        |
 | `npm run test:smoke`      | Server-renders every component + asset/a11y assertions  |
+| `npm run test:account`    | Account dialog ARIA wiring + field validation rules     |
+| `npm run test:account:flow` | Drives the account flow in headless Chromium (needs `npx playwright install chromium`) |
 | `npm run generate:assets` | Redraws the vector art in `public/images` and `public/og-image.png` |
 | `npm run fetch:photos`    | Re-fetches the CC0 photography into `public/images/photos`  |
 
@@ -104,6 +106,9 @@ root-co/
 - **Explore Collections** — snap-scrolling gallery with arrow controls and edge-state detection.
 - **Editorial band** — statement + stats + offset imagery.
 - **Cart drawer** — per-size line items, quantity steppers, free-shipping progress, subtotal.
+- **Account dialog** — sign in / create account tabs, inline validation, show-password toggle,
+  animated field entrances, and a signed-in summary panel. Reachable from the header icon
+  (desktop) or the mobile menu.
 - **Wishlist** — toggle hearts, persisted to `localStorage`.
 - **Search overlay** — live results across name/category/tags, popular searches, category browse.
 - **Support chat widget** — scripted replies, typing indicator, fully keyboard accessible.
@@ -119,6 +124,11 @@ root-co/
 | FR-03 Wishlist | `WishlistContext` → `useLocalStorage('cstyle.wishlist.v1')` |
 | FR-04 Cart | `CartContext` → `useLocalStorage('cstyle.cart.v1')`, lines keyed by id + size |
 | FR-05 Category filter | `ShopContext`; `Sale` is derived from discounted products |
+| FR-06 Account | `AuthContext` → `localStorage('rootco.session.v1')`, `AccountModal` |
+
+The account flow is **front-end only**: there is no backend, no account is created and no request
+leaves the browser. Sign-in accepts any well-formed email and derives a display name from it.
+Passwords are validated but never stored — only a name, an email and a timestamp are persisted.
 
 ---
 
@@ -129,23 +139,36 @@ root-co/
 - Icon-only buttons carry `aria-label`; toggles expose `aria-pressed`.
 - Drawers and overlays are `role="dialog" aria-modal="true"`, trap Tab, close on Escape
   (top-most overlay only) and restore focus to the trigger.
+- The account form uses a labelled `role="tablist"` for the sign-in / sign-up switch, links every
+  field error with `aria-describedby`, and marks fields `aria-invalid` only when they actually fail.
+  Asserted by `test:account` and exercised end-to-end by `test:account:flow`.
 - Body scroll locking handles iOS Safari and the scrollbar gutter.
 - Visible focus rings on every interactive element, inverted on dark surfaces.
 - `prefers-reduced-motion` disables animation and smooth scrolling.
 
 ## Performance
 
-- React is code-split into its own chunk; the app payload is ~20 kB gzipped on top of it.
-- All imagery is resolution-independent SVG — the whole `public/images` tree is ~130 kB.
+- React is code-split into its own chunk; the app payload is ~24 kB gzipped on top of it.
+- Photography is pre-cropped to the exact frame each slot renders (4:5 cards, 16:9 hero, 3:2 bands)
+  and served as mozjpeg q80, so the browser does no client-side resizing. The whole `public/images`
+  tree is ~3.3 MB; the vector art in it is ~340 kB.
 - Below-the-fold images are `loading="lazy"` + `decoding="async"`; the hero is `fetchPriority="high"`.
 - Inter is self-hosted with only the latin subsets, preloaded in `index.html`.
 - No runtime API calls, no external requests, no tracking.
 
 ## SEO
 
-Title, description, canonical, Open Graph and Twitter card metadata in `index.html`; semantic
-headings; descriptive alt text. **Before deploying**, replace the `https://octocat.github.io/`
-canonical/`og:url` with your real domain.
+Title, description, canonical, Open Graph and Twitter card metadata in `index.html`, plus
+`robots.txt` and `sitemap.xml`; semantic headings and descriptive alt text.
+
+The production URL is currently `https://root.co/`. Change it with one command, which rewrites the
+canonical, `og:url`, the absolute `og:image` and both SEO files together:
+
+```bash
+npm run set:url -- https://your-domain.com
+```
+
+`npm run check:url` (add `--strict` to fail) reports any mismatch; CI runs it in strict mode.
 
 ---
 

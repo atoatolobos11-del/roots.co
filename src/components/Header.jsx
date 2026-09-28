@@ -3,18 +3,22 @@ import { Menu, Search, ShoppingBag, User, Heart } from 'lucide-react'
 import Wordmark from './Wordmark.jsx'
 import MobileMenu from './MobileMenu.jsx'
 import SearchOverlay from './SearchOverlay.jsx'
+import AccountModal from './AccountModal.jsx'
 import { navLinks } from '../data/site.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
 import { useShop } from '../context/ShopContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { cn } from '../lib/utils.js'
 
 /** Sticky main navigation (PRD §4.2). */
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAccountOpen, setIsAccountOpen] = useState(false)
   const { count, openCart } = useCart()
   const wishlist = useWishlist()
   const { applyFilter, openSearch, isSearchOpen, activeFilter } = useShop()
+  const { user } = useAuth()
 
   const goTo = (event, link) => {
     event.preventDefault()
@@ -81,8 +85,13 @@ export default function Header() {
               <IconButton label="Search products" onClick={openSearch} className="hidden sm:inline-flex">
                 <Search size={18} strokeWidth={1.5} />
               </IconButton>
-              <IconButton label="Account" className="hidden md:inline-flex" href="#contact">
-                <User size={18} strokeWidth={1.5} />
+              <IconButton
+                label={user ? `Account, signed in as ${user.email}` : 'Sign in or create an account'}
+                className="hidden md:inline-flex"
+                onClick={() => setIsAccountOpen(true)}
+              >
+                <User size={18} strokeWidth={1.5} className={cn(user && 'fill-ink')} />
+                {user && <Count>•</Count>}
               </IconButton>
               <IconButton
                 label={`Wishlist, ${wishlist.count} ${wishlist.count === 1 ? 'item' : 'items'}`}
@@ -103,8 +112,17 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu open={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={goTo} />
+      <MobileMenu
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onNavigate={goTo}
+        onOpenAccount={() => {
+          setIsMenuOpen(false)
+          setIsAccountOpen(true)
+        }}
+      />
       <SearchOverlay open={isSearchOpen} />
+      <AccountModal open={isAccountOpen} onClose={() => setIsAccountOpen(false)} />
     </>
   )
 }
