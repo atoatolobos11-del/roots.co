@@ -27,6 +27,8 @@ npm run dev        # http://localhost:5173
 | `npm run test:smoke`      | Server-renders every component + asset/a11y assertions  |
 | `npm run test:account`    | Account dialog ARIA wiring + field validation rules     |
 | `npm run test:account:flow` | Drives the account flow in headless Chromium (needs `npx playwright install chromium`) |
+| `npm run audit:links`    | Fails on any button without a handler or a link pointing nowhere |
+| `npm run test:interactions` | Clicks every control and asserts each one does something observable |
 | `npm run generate:assets` | Redraws the vector art in `public/images` and `public/og-image.png` |
 | `npm run fetch:photos`    | Re-fetches the CC0 photography into `public/images/photos`  |
 
@@ -106,6 +108,10 @@ root-co/
 - **Explore Collections** — snap-scrolling gallery with arrow controls and edge-state detection.
 - **Editorial band** — statement + stats + offset imagery.
 - **Cart drawer** — per-size line items, quantity steppers, free-shipping progress, subtotal.
+- **Checkout** — three steps (contact → delivery → confirmation) with validation, delivery
+  options and a live order summary. Placing an order clears the bag. No payment field exists.
+- **Help & about dialog** — contact, shipping, returns, FAQ, size guide, stores,
+  sustainability, careers and the story, opened from the footer, the promo CTAs and the chat widget.
 - **Account dialog** — sign in / create account tabs, inline validation, show-password toggle,
   animated field entrances, and a signed-in summary panel. Reachable from the header icon
   (desktop) or the mobile menu.
@@ -125,10 +131,23 @@ root-co/
 | FR-04 Cart | `CartContext` → `useLocalStorage('cstyle.cart.v1')`, lines keyed by id + size |
 | FR-05 Category filter | `ShopContext`; `Sale` is derived from discounted products |
 | FR-06 Account | `AuthContext` → `localStorage('rootco.session.v1')`, `AccountModal` |
+| FR-07 Checkout | `CheckoutContext` + `CheckoutModal`; placing an order clears the cart |
 
-The account flow is **front-end only**: there is no backend, no account is created and no request
-leaves the browser. Sign-in accepts any well-formed email and derives a display name from it.
-Passwords are validated but never stored — only a name, an email and a timestamp are persisted.
+### Every control does something
+
+Two guards keep it that way, both in CI:
+
+- `audit:links` is a static check — no `<button>` without an `onClick` or `type="submit"`, no
+  `href="#"`, no hash link to an id that does not exist, and every collection card mapped to a
+  real filter.
+- `test:interactions` is the behavioural check — it clicks each control in a real browser and
+  asserts an observable effect: a dialog opens, the grid filters, the scroll moves, or the bag
+  changes. This is what catches a handler wired to the wrong thing, which a static check cannot.
+
+The account and checkout flows are **front-end only**: there is no backend, no order is placed and no
+request leaves the browser. Sign-in accepts any well-formed email and derives a display name from
+it. Passwords are validated but never stored — only a name, an email and a timestamp are persisted.
+Checkout deliberately has no card field; placing an order clears the bag and shows a reference.
 
 ---
 
