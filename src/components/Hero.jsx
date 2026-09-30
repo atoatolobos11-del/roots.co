@@ -1,7 +1,18 @@
 import { ArrowRight, ArrowDown } from 'lucide-react'
+import { useShop } from '../context/ShopContext.jsx'
 
 /** Full-bleed fashion hero with left-aligned overlay copy (PRD §5). */
 export default function Hero() {
+  const { applyFilter } = useShop()
+
+  const shop = (event, filter) => {
+    event.preventDefault()
+    // Reset the filter so "Shop new in" from anywhere shows the full grid
+    // rather than whatever was last selected.
+    applyFilter(filter)
+    document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <section id="top" className="relative isolate overflow-hidden bg-off">
       <picture>
@@ -40,7 +51,7 @@ export default function Hero() {
             everyday essentials and new-season tailoring.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href="#new-arrivals" className="btn-light">
+            <a href="#new-arrivals" onClick={(event) => shop(event, 'all')} className="btn-light">
               Shop new in
               <ArrowRight size={15} strokeWidth={1.5} />
             </a>

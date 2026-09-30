@@ -56,7 +56,7 @@ export default function PromoCard({ promo, onNavigate, className }) {
           {promo.text}
         </p>
         <a
-          href={promo.href}
+          href={promo.href ?? '#'}
           onClick={(event) => onNavigate?.(event, promo)}
           className={cn(
             'mt-5 inline-flex items-center gap-1.5 border-b pb-1 text-[10px] font-semibold uppercase tracking-label transition-colors duration-200',

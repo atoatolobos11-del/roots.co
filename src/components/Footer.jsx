@@ -2,12 +2,33 @@ import { useState } from 'react'
 import { ArrowRight, Check, CreditCard, Globe } from 'lucide-react'
 import Wordmark from './Wordmark.jsx'
 import { brandValues, footerColumns, announcementMessages, FREE_SHIPPING_THRESHOLD } from '../data/site.js'
+import { useInfo } from '../context/InfoContext.jsx'
+import { useShop } from '../context/ShopContext.jsx'
 
 /**
  * Dark brand-values band (PRD §15) + full site footer (PRD §16).
  * Both live in one dark block so the page ends on a single heavy surface.
  */
 export default function Footer() {
+  const { openInfo } = useInfo()
+  const { applyFilter } = useShop()
+
+  // A link is either a shop link (apply a filter and jump to the grid) or a
+  // help/about link (open the info dialog). Nothing falls through to a hash
+  // that does not exist.
+  const onFooterLink = (event, link) => {
+    if (link.filter) {
+      event.preventDefault()
+      applyFilter(link.filter)
+      document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    if (link.topic) {
+      event.preventDefault()
+      openInfo(link.topic)
+    }
+  }
+
   return (
     <footer className="on-dark bg-ink text-white">
       {/* Brand values */}
@@ -57,10 +78,14 @@ export default function Footer() {
               {column.links.map((link) => (
                 <li key={link.label}>
                   <a
-                    href={link.href}
-                    className="text-[12px] text-white/60 transition-colors duration-200 hover:text-white"
+                    href={link.href ?? '#'}
+                    onClick={(event) => onFooterLink(event, link)}
+                    className="inline-flex items-center gap-1 text-[12px] text-white/60 transition-colors duration-200 hover:text-white"
                   >
                     {link.label}
+                    {link.topic && (
+                      <ArrowRight size={11} strokeWidth={1.5} aria-hidden="true" className="opacity-50" />
+                    )}
                   </a>
                 </li>
               ))}

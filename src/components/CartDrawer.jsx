@@ -2,16 +2,25 @@ import { useRef } from 'react'
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react'
 import { useOverlay } from '../hooks/useOverlay.js'
 import { useCart } from '../context/CartContext.jsx'
+import { useCheckout } from '../context/CheckoutContext.jsx'
 import { FREE_SHIPPING_THRESHOLD } from '../data/site.js'
 import { formatPrice, cn } from '../lib/utils.js'
 
-/** Slide-in shopping bag (PRD §22 FR-04). No payment is processed. */
+/** Slide-in shopping bag (PRD §22 FR-04). Leads into the demo checkout. */
 export default function CartDrawer() {
   const panelRef = useRef(null)
   const { items, isOpen, closeCart, increase, decrease, removeItem, subtotal, count, clearCart } =
     useCart()
+  const checkout = useCheckout()
 
   useOverlay(isOpen, panelRef, closeCart)
+
+  // Leave the drawer before the checkout dialog opens, so the two overlays are
+  // never stacked and Escape always closes the visible one.
+  const startCheckout = () => {
+    closeCart()
+    checkout.openCheckout()
+  }
 
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal)
   const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100)
@@ -151,8 +160,12 @@ export default function CartDrawer() {
                 <span className="text-[11px] uppercase tracking-label text-ash">Subtotal</span>
                 <span className="text-lg font-medium tabular-nums">{formatPrice(subtotal)}</span>
               </div>
-              <p className="mt-1.5 text-[11px] text-ash">Taxes and shipping calculated at checkout.</p>
-              <button type="button" className="btn-dark mt-4 w-full">
+              <p className="mt-1.5 text-[11px] text-ash">
+                {remaining > 0
+                  ? `${formatPrice(remaining)} more for free shipping.`
+                  : 'Free shipping unlocked.'}
+              </p>
+              <button type="button" onClick={startCheckout} className="btn-dark mt-4 w-full">
                 Checkout
                 <ArrowRight size={15} strokeWidth={1.5} />
               </button>

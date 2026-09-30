@@ -1,10 +1,19 @@
 import { ArrowRight } from 'lucide-react'
+import { useShop } from '../context/ShopContext.jsx'
 
 /**
  * Editorial statement band that sits between the collection gallery and the
  * dark footer — keeps the page rhythm from going dark-on-dark.
  */
 export default function EditorialBand() {
+  const { applyFilter } = useShop()
+
+  const shop = (event) => {
+    event.preventDefault()
+    applyFilter('all')
+    document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <section aria-labelledby="editorial-title" className="shell py-12 sm:py-14 lg:py-20">
       <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
@@ -36,7 +45,7 @@ export default function EditorialBand() {
               </div>
             ))}
           </dl>
-          <a href="#new-arrivals" className="link-arrow mt-8">
+          <a href="#new-arrivals" onClick={shop} className="link-arrow mt-8">
             Shop the collection
             <ArrowRight size={14} strokeWidth={1.5} />
           </a>

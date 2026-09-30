@@ -1,0 +1,13 @@
+# Local scratch scripts (see .gitignore) - never ship these.
+*-tmp.mjs
+
+# Vercel builds from source, so the local output dir is not needed.
+dist
+dist-ssr
+
+# Local env files and editor cruft.
+.env
+.env.*
+!.env.example
+.vscode
+.idea

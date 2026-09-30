@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: npx oxlint --deny-warnings src scripts
 
+      - name: Audit for dead buttons and links
+        run: npm run audit:links
+
       - name: Build
         run: npm run build
 
@@ -41,10 +44,11 @@ jobs:
       - name: Account dialog a11y and validation
         run: npm run test:account
 
-      - name: Account flow in a real browser
+      - name: Browser tests
         run: |
           npx playwright install --with-deps chromium
           npm run test:account:flow
+          npm run test:interactions
 
       - name: Verify the production URL is stamped
         # index.html, robots.txt and sitemap.xml must all agree on the host,

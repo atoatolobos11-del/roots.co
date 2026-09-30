@@ -43,7 +43,7 @@ export const promos = [
     title: ['Students get', '10% off'],
     text: 'Verify with your student email and take 10% off your first order.',
     cta: 'Learn More',
-    href: '#newsletter',
+    topic: 'contact',
   },
   {
     id: 'new-season',
@@ -55,6 +55,7 @@ export const promos = [
     text: 'Relaxed tailoring and warm neutrals, restated for the season ahead.',
     cta: 'Shop Now',
     href: '#new-arrivals',
+    filter: 'all',
   },
   {
     id: 'store',
@@ -65,7 +66,7 @@ export const promos = [
     title: ['Visit us', 'in store'],
     text: 'Find a ROOT.CO store near you.',
     cta: 'Find a Store',
-    href: '#stores',
+    topic: 'stores',
   },
 ]
 
@@ -98,7 +99,7 @@ export const footerColumns = [
   {
     title: 'Shop',
     links: [
-      { label: 'New In', href: '#new-arrivals' },
+      { label: 'New In', href: '#new-arrivals', filter: 'all' },
       { label: 'Tops', href: '#new-arrivals', filter: 'tops' },
       { label: 'Tailoring', href: '#new-arrivals', filter: 'tailoring' },
       { label: 'Outerwear', href: '#new-arrivals', filter: 'outerwear' },
@@ -107,23 +108,26 @@ export const footerColumns = [
       { label: 'Sale', href: '#new-arrivals', filter: 'sale' },
     ],
   },
+  // `filter` links apply a category and jump to the grid; `topic` links open
+  // the help/about dialog (see src/data/info.js). No link relies on a hash
+  // target that does not exist.
   {
     title: 'Help',
     links: [
-      { label: 'Contact', href: '#contact' },
-      { label: 'Shipping', href: '#contact' },
-      { label: 'Returns', href: '#contact' },
-      { label: 'FAQ', href: '#contact' },
-      { label: 'Size Guide', href: '#contact' },
+      { label: 'Contact', topic: 'contact' },
+      { label: 'Shipping', topic: 'shipping' },
+      { label: 'Returns', topic: 'returns' },
+      { label: 'FAQ', topic: 'faq' },
+      { label: 'Size Guide', topic: 'size-guide' },
     ],
   },
   {
     title: 'About',
     links: [
-      { label: 'Our Story', href: '#values' },
-      { label: 'Sustainability', href: '#values' },
-      { label: 'Stores', href: '#stores' },
-      { label: 'Careers', href: '#contact' },
+      { label: 'Our Story', topic: 'story' },
+      { label: 'Sustainability', topic: 'sustainability' },
+      { label: 'Stores', topic: 'stores' },
+      { label: 'Careers', topic: 'careers' },
     ],
   },
 ]

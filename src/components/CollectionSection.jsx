@@ -2,11 +2,19 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import CollectionCard from './CollectionCard.jsx'
 import { collections } from '../data/collections.js'
+import { useShop } from '../context/ShopContext.jsx'
 
 /** Horizontal collection gallery (PRD §12). */
 export default function CollectionSection() {
   const trackRef = useRef(null)
   const [canScroll, setCanScroll] = useState({ left: false, right: true })
+  const { applyFilter } = useShop()
+
+  // Selecting a card filters the grid to that collection, then scrolls to it.
+  const explore = (collection) => {
+    applyFilter(collection.filter)
+    document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const syncScrollState = () => {
     const track = trackRef.current
@@ -65,7 +73,7 @@ export default function CollectionSection() {
         className="shell mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 no-scrollbar sm:gap-4 lg:mt-9"
       >
         {collections.map((collection) => (
-          <CollectionCard key={collection.id} collection={collection} />
+          <CollectionCard key={collection.id} collection={collection} onExplore={explore} />
         ))}
       </div>
     </section>

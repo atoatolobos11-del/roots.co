@@ -28,6 +28,8 @@ const checks = [
   { file: '/src/components/CartDrawer.jsx', name: 'CartDrawer' },
   { file: '/src/components/SearchOverlay.jsx', name: 'SearchOverlay' },
   { file: '/src/components/AccountModal.jsx', name: 'AccountModal' },
+  { file: '/src/components/InfoModal.jsx', name: 'InfoModal' },
+  { file: '/src/components/CheckoutModal.jsx', name: 'CheckoutModal' },
   { file: '/src/components/ChatWidget.jsx', name: 'ChatWidget' },
   { file: '/src/components/Footer.jsx', name: 'Footer' },
   { file: '/src/pages/Home.jsx', name: 'Home' },
@@ -42,10 +44,19 @@ async function renderWithProviders(file) {
       server.ssrLoadModule('/src/context/WishlistContext.jsx'),
       server.ssrLoadModule('/src/context/CartContext.jsx'),
       server.ssrLoadModule('/src/context/ShopContext.jsx'),
+      server.ssrLoadModule('/src/context/InfoContext.jsx'),
+      server.ssrLoadModule('/src/context/CheckoutContext.jsx'),
     ]),
   ])
 
-  const [{ AuthProvider }, { WishlistProvider }, { CartProvider }, { ShopProvider }] = providers
+  const [
+    { AuthProvider },
+    { WishlistProvider },
+    { CartProvider },
+    { ShopProvider },
+    { InfoProvider },
+    { CheckoutProvider },
+  ] = providers
   return renderToString(
     createElement(
       AuthProvider,
@@ -56,7 +67,19 @@ async function renderWithProviders(file) {
         createElement(
           CartProvider,
           null,
-          createElement(ShopProvider, null, createElement(Component, { open: false })),
+          createElement(
+            ShopProvider,
+            null,
+            createElement(
+              InfoProvider,
+              null,
+              createElement(
+                CheckoutProvider,
+                null,
+                createElement(Component, { open: false }),
+              ),
+            ),
+          ),
         ),
       ),
     ),

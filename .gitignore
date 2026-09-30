@@ -25,6 +25,7 @@ dist-ssr
 
 # Local scratch space
 public/_dev
+*-tmp.mjs
 
 # Screenshots written by scripts/test-account-flow.mjs
 .screenshots

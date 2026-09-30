@@ -138,22 +138,18 @@ function Count({ children }) {
   )
 }
 
-function IconButton({ label, children, className, href, onClick }) {
-  const classes = cn(
-    'relative -mr-1 rounded-full p-2 text-ink transition-colors duration-200 hover:bg-off',
-    className,
-  )
-
-  if (href) {
-    return (
-      <a href={href} className={classes} aria-label={label}>
-        {children}
-      </a>
-    )
-  }
-
+/** Icon-only control. Always a button — every icon here opens a panel. */
+function IconButton({ label, children, className, onClick }) {
   return (
-    <button type="button" onClick={onClick} className={classes} aria-label={label}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'relative -mr-1 rounded-full p-2 text-ink transition-colors duration-200 hover:bg-off',
+        className,
+      )}
+      aria-label={label}
+    >
       {children}
     </button>
   )

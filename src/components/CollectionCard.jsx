@@ -1,10 +1,19 @@
 import { ArrowRight } from 'lucide-react'
 
 /** Tall editorial collection card with gradient overlay (PRD §12). */
-export default function CollectionCard({ collection }) {
+export default function CollectionCard({ collection, onExplore }) {
+  const handleClick = (event) => {
+    // Filter the grid to this collection's category, then jump to it. Without
+    // this the card scrolled the page but left the previous filter in place.
+    event.preventDefault()
+    onExplore(collection)
+  }
+
   return (
     <a
       href="#new-arrivals"
+      onClick={handleClick}
+      aria-label={`Shop the ${collection.name} collection`}
       className="group relative isolate block h-[380px] w-[76vw] shrink-0 snap-start overflow-hidden bg-mist sm:h-[460px] sm:w-[44vw] lg:h-[560px] lg:w-[24vw] xl:w-[300px]"
     >
       <img

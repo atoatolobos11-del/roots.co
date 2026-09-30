@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { MessageCircle, X, Send, Sparkles } from 'lucide-react'
+import { MessageCircle, X, Send, Sparkles, ArrowRight } from 'lucide-react'
 import { chatReplies, supportHours } from '../data/site.js'
+import { useInfo } from '../context/InfoContext.jsx'
 import { cn } from '../lib/utils.js'
 
 const QUICK_REPLIES = Object.keys(chatReplies)
@@ -18,6 +19,7 @@ export default function ChatWidget() {
   const [isTyping, setIsTyping] = useState(false)
   const timerRef = useRef(null)
   const logRef = useRef(null)
+  const { openInfo } = useInfo()
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
 
@@ -118,13 +120,26 @@ export default function ChatWidget() {
               </li>
             ))}
           </ul>
-          <a
-            href="mailto:support@root.co"
-            className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-label text-ash transition-colors duration-200 hover:text-ink"
-          >
-            <Send size={12} strokeWidth={1.5} aria-hidden="true" />
-            support@root.co
-          </a>
+          <div className="mt-3 space-y-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false)
+                openInfo('contact')
+              }}
+              className="flex w-full items-center justify-between gap-2 border border-line px-3 py-2 text-[10px] font-semibold uppercase tracking-label text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white"
+            >
+              Contact &amp; store details
+              <ArrowRight size={12} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+            <a
+              href="mailto:support@root.co"
+              className="flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-label text-ash transition-colors duration-200 hover:text-ink"
+            >
+              <Send size={12} strokeWidth={1.5} aria-hidden="true" />
+              support@root.co
+            </a>
+          </div>
         </div>
       </div>
 

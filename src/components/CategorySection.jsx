@@ -7,11 +7,21 @@ import { useShop } from '../context/ShopContext.jsx'
 export default function CategorySection() {
   const { activeFilter, applyFilter } = useShop()
 
+  const goToGrid = () =>
+    document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
   const select = (category) => {
-    applyFilter(category.id)
-    requestAnimationFrame(() =>
-      document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-    )
+    // Tapping the active category clears the filter, so a tile always toggles.
+    applyFilter(activeFilter === category.id ? 'all' : category.id)
+    requestAnimationFrame(goToGrid)
+  }
+
+  // "View all" resets the filter, otherwise it lands on the grid still filtered
+  // by whatever the visitor last tapped.
+  const viewAll = (event) => {
+    event.preventDefault()
+    applyFilter('all')
+    requestAnimationFrame(goToGrid)
   }
 
   return (
@@ -20,7 +30,7 @@ export default function CategorySection() {
         <h2 id="categories-title" className="text-[22px] font-semibold uppercase tracking-[-0.01em] sm:text-[26px] lg:text-[30px]">
           Shop by category
         </h2>
-        <a href="#new-arrivals" className="link-arrow hidden sm:inline-flex">
+        <a href="#new-arrivals" onClick={viewAll} className="link-arrow hidden sm:inline-flex">
           View all
           <ArrowRight size={14} strokeWidth={1.5} />
         </a>
@@ -43,7 +53,7 @@ export default function CategorySection() {
         ))}
       </div>
 
-      <a href="#new-arrivals" className="link-arrow mt-6 sm:hidden">
+      <a href="#new-arrivals" onClick={viewAll} className="link-arrow mt-6 sm:hidden">
         View all
         <ArrowRight size={14} strokeWidth={1.5} />
       </a>
