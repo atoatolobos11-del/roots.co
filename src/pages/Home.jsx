@@ -1,4 +1,5 @@
 import AnnouncementBar from '../components/AnnouncementBar.jsx'
+import AdminBar from '../components/AdminBar.jsx'
 import Header from '../components/Header.jsx'
 import Hero from '../components/Hero.jsx'
 import BenefitsBar from '../components/BenefitsBar.jsx'
@@ -43,6 +44,7 @@ export default function Home() {
                     Skip to content
                   </a>
 
+                  <AdminBar />
                   <AnnouncementBar />
                   <Header />
 

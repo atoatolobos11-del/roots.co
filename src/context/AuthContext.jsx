@@ -21,10 +21,6 @@ export const DEMO_ACCOUNTS = {
 
 /**
  * Client-only demo session with role-based access control.
- *
- * There is no backend: sign-up and sign-in validate input, then persist a
- * session object to localStorage. Swapping this for a real API means replacing
- * the async calls below and nothing else.
  */
 function readStoredSession() {
   try {
@@ -33,7 +29,7 @@ function readStoredSession() {
     const parsed = JSON.parse(raw)
     // Migrate old sessions without role
     if (parsed && !parsed.role) {
-      parsed.role = parsed.email?.toLowerCase().startsWith('admin@') ? 'admin' : 'customer'
+      parsed.role = parsed.email?.toLowerCase().includes('admin') ? 'admin' : 'customer'
     }
     return parsed
   } catch {
@@ -80,7 +76,7 @@ export function AuthProvider({ children }) {
   const signUp = useCallback(
     async ({ name, email, role }) => {
       const emailClean = email.trim().toLowerCase()
-      const assignedRole = role || (emailClean.startsWith('admin@') ? 'admin' : 'customer')
+      const assignedRole = role || (emailClean.includes('admin') ? 'admin' : 'customer')
       const session = {
         name: name.trim(),
         email: emailClean,
@@ -96,7 +92,7 @@ export function AuthProvider({ children }) {
   const signIn = useCallback(
     async ({ email, role }) => {
       const emailClean = email.trim().toLowerCase()
-      const assignedRole = role || (emailClean.startsWith('admin@') ? 'admin' : 'customer')
+      const assignedRole = role || (emailClean.includes('admin') ? 'admin' : 'customer')
       const local = emailClean.split('@')[0].replace(/[._-]+/g, ' ')
       const name =
         assignedRole === 'admin' && !local.includes(' ')
@@ -130,6 +126,13 @@ export function AuthProvider({ children }) {
     [persist],
   )
 
+  const toggleRole = useCallback(() => {
+    if (!user) return
+    const nextRole = user.role === 'admin' ? 'customer' : 'admin'
+    const updated = { ...user, role: nextRole }
+    persist(updated)
+  }, [user, persist])
+
   const signOut = useCallback(() => {
     setUser(null)
     try {
@@ -150,9 +153,10 @@ export function AuthProvider({ children }) {
       signUp,
       signIn,
       signInAsDemo,
+      toggleRole,
       signOut,
     }),
-    [user, isAdmin, isReady, signUp, signIn, signInAsDemo, signOut],
+    [user, isAdmin, isReady, signUp, signIn, signInAsDemo, toggleRole, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

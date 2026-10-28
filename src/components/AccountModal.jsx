@@ -223,8 +223,7 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
 
               {isSignUp && (
                 <p className="text-[11px] leading-relaxed text-ash">
-                  At least 8 characters, including a letter and a number. This is a portfolio demo —
-                  no account is created and nothing is sent anywhere.
+                  At least 8 characters, including a letter and a number. Include "admin" in email to get administrator access.
                 </p>
               )}
 
@@ -280,13 +279,14 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
                     onClick={async () => {
                       await signInAsDemo('admin')
                       onClose()
+                      if (onOpenInventory) onOpenInventory()
                     }}
                     className="flex flex-col items-center justify-center rounded-lg border border-ink bg-ink p-2 text-center text-white transition-colors duration-200 hover:bg-neutral-800"
                   >
                     <span className="flex items-center gap-1 text-[11px] font-semibold text-white">
                       <ShieldCheck size={12} strokeWidth={2} /> Admin Account
                     </span>
-                    <span className="text-[9px] text-white/70">Full inventory access</span>
+                    <span className="text-[9px] text-white/70">Click to open inventory</span>
                   </button>
                 </div>
               </div>
@@ -356,7 +356,7 @@ function Field({
 }
 
 function SignedIn({ user, onClose, onSignOut, onOpenInventory }) {
-  const { isAdmin, signInAsDemo } = useAuth()
+  const { isAdmin, toggleRole } = useAuth()
 
   return (
     <div className="px-6 py-8 text-center">
@@ -409,44 +409,49 @@ function SignedIn({ user, onClose, onSignOut, onOpenInventory }) {
         </div>
       </dl>
 
-      {/* Admin Quick Action */}
-      {isAdmin && onOpenInventory && (
+      {/* Admin Action Button */}
+      {isAdmin ? (
         <div className="mt-4">
           <button
             type="button"
             onClick={() => {
               onClose()
-              onOpenInventory()
+              if (onOpenInventory) onOpenInventory()
             }}
-            className="btn-dark w-full flex items-center justify-center gap-2 py-2.5 text-xs font-semibold uppercase tracking-label"
+            className="btn-dark w-full flex items-center justify-center gap-2 py-2.5 text-xs font-semibold uppercase tracking-label shadow-sm"
           >
             <Boxes size={15} strokeWidth={1.8} />
             Open Inventory System
           </button>
         </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-line bg-mist/30 p-3 text-left">
+          <p className="text-[11px] text-ash">
+            Need inventory access? Switch this account to Administrator:
+          </p>
+          <button
+            type="button"
+            onClick={toggleRole}
+            className="mt-2 w-full rounded-md border border-ink bg-white py-1.5 text-xs font-semibold uppercase tracking-label text-ink hover:bg-ink hover:text-white transition-colors duration-200"
+          >
+            Switch to Administrator Role
+          </button>
+        </div>
       )}
 
-      {/* Role Switcher */}
-      <div className="mt-3 flex items-center justify-center gap-2 text-[10px] text-ash">
-        <span>Switch demo role:</span>
-        {isAdmin ? (
+      {/* Role Toggle Switcher */}
+      {isAdmin && (
+        <div className="mt-3 flex items-center justify-center gap-2 text-[10px] text-ash">
+          <span>Viewing as Admin &bull;</span>
           <button
             type="button"
-            onClick={() => signInAsDemo('customer')}
+            onClick={toggleRole}
             className="font-semibold text-ink underline underline-offset-2 hover:text-accent"
           >
-            Switch to Customer
+            Switch to Customer View
           </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => signInAsDemo('admin')}
-            className="font-semibold text-ink underline underline-offset-2 hover:text-accent"
-          >
-            Switch to Admin
-          </button>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="mt-5 flex flex-col gap-2 sm:flex-row">
         <button type="button" onClick={onClose} className="btn-dark flex-1">
