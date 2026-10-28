@@ -80,28 +80,11 @@ export default function Header() {
                   />
                 </a>
               ))}
-
-              {/* Admin-only Center Nav Inventory Button */}
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={openInventory}
-                  className="flex items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-[11px] font-semibold uppercase tracking-label text-white shadow-sm transition-transform duration-200 hover:scale-105 hover:bg-neutral-800"
-                >
-                  <Boxes size={13} strokeWidth={2} />
-                  <span>Inventory</span>
-                  {stats.lowStockCount + stats.outOfStockCount > 0 && (
-                    <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white">
-                      {stats.lowStockCount + stats.outOfStockCount}
-                    </span>
-                  )}
-                </button>
-              )}
             </nav>
 
             {/* Right — utilities */}
             <div className="flex items-center justify-end gap-1 sm:gap-1.5">
-              {/* Admin-only inventory button — completely hidden from regular shop customers */}
+              {/* Single Admin-only inventory button */}
               {isAdmin && (
                 <button
                   type="button"
