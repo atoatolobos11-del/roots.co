@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
-import { X, ArrowRight, Check, Eye, EyeOff, Mail, Lock, User as UserIcon } from 'lucide-react'
+import { X, ArrowRight, Check, Eye, EyeOff, Mail, Lock, User as UserIcon, Boxes, ShieldCheck } from 'lucide-react'
 import { useOverlay } from '../hooks/useOverlay.js'
 import { useAuth, authRules } from '../context/AuthContext.jsx'
 import { cn } from '../lib/utils.js'
 
 /**
- * Account dialog with a sign-in / sign-up switch (PRD §22 FR-06).
- *
- * Front-end only: input is validated and the session is kept in
- * localStorage. No credentials are sent anywhere and no account is created.
+ * Account dialog with a sign-in / sign-up switch (PRD §22 FR-06)
+ * and role-based demo accounts (Customer vs Admin).
  */
-export default function AccountModal({ open, onClose }) {
+export default function AccountModal({ open, onClose, onOpenInventory }) {
   const panelRef = useRef(null)
-  const { user, isAuthenticated, signIn, signUp, signOut } = useAuth()
+  const { user, isAuthenticated, signIn, signUp, signOut, signInAsDemo } = useAuth()
 
   const [mode, setMode] = useState('signin')
   const [values, setValues] = useState({ name: '', email: '', password: '', confirmPassword: '' })
@@ -73,8 +71,7 @@ export default function AccountModal({ open, onClose }) {
   }
 
   // Gate on the session, not on `status`: a returning visitor whose session was
-  // restored from localStorage has never submitted the form in this mount, so
-  // keying this off the submit status would show them the sign-in form again.
+  // restored from localStorage has never submitted the form in this mount.
   const signedIn = isAuthenticated
 
   return (
@@ -107,11 +104,15 @@ export default function AccountModal({ open, onClose }) {
         )}
       >
         {signedIn ? (
-          <SignedIn user={user} onClose={onClose} onSignOut={signOut} />
+          <SignedIn
+            user={user}
+            onClose={onClose}
+            onSignOut={signOut}
+            onOpenInventory={onOpenInventory}
+          />
         ) : (
           <>
-            {/* Decorative header band. Animated on mount, and it respects
-                prefers-reduced-motion via the global rule in index.css. */}
+            {/* Decorative header band */}
             <div className="on-dark relative h-28 overflow-hidden bg-ink sm:h-32">
               <div
                 aria-hidden="true"
@@ -192,7 +193,6 @@ export default function AccountModal({ open, onClose }) {
                   error={errors[key]}
                   autoComplete={authRules[key].autoComplete}
                   onChange={setField(key)}
-                  // Staggered entrance; the delay is the field's position.
                   style={{ animationDelay: `${index * 70}ms` }}
                   {...(key === 'password' || key === 'confirmPassword'
                     ? {
@@ -257,6 +257,39 @@ export default function AccountModal({ open, onClose }) {
                   {isSignUp ? 'Sign in' : 'Create an account'}
                 </button>
               </p>
+
+              {/* Demo Accounts Quick Login */}
+              <div className="border-t border-line pt-3">
+                <p className="text-center text-[10px] font-semibold uppercase tracking-label text-ash">
+                  One-Click Demo Accounts
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await signInAsDemo('customer')
+                      onClose()
+                    }}
+                    className="flex flex-col items-center justify-center rounded-lg border border-line bg-off/40 p-2 text-center transition-colors duration-200 hover:bg-off hover:border-ink"
+                  >
+                    <span className="text-[11px] font-semibold text-ink">Customer Account</span>
+                    <span className="text-[9px] text-ash">Regular shopper (no inventory)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await signInAsDemo('admin')
+                      onClose()
+                    }}
+                    className="flex flex-col items-center justify-center rounded-lg border border-ink bg-ink p-2 text-center text-white transition-colors duration-200 hover:bg-neutral-800"
+                  >
+                    <span className="flex items-center gap-1 text-[11px] font-semibold text-white">
+                      <ShieldCheck size={12} strokeWidth={2} /> Admin Account
+                    </span>
+                    <span className="text-[9px] text-white/70">Full inventory access</span>
+                  </button>
+                </div>
+              </div>
             </form>
           </>
         )}
@@ -322,7 +355,9 @@ function Field({
   )
 }
 
-function SignedIn({ user, onClose, onSignOut }) {
+function SignedIn({ user, onClose, onSignOut, onOpenInventory }) {
+  const { isAdmin, signInAsDemo } = useAuth()
+
   return (
     <div className="px-6 py-8 text-center">
       <span className="mx-auto flex h-14 w-14 animate-pop items-center justify-center rounded-full bg-ink text-white">
@@ -337,6 +372,26 @@ function SignedIn({ user, onClose, onSignOut }) {
         <div className="flex justify-between gap-4">
           <dt className="text-ash">Name</dt>
           <dd className="font-medium">{user.name}</dd>
+        </div>
+        <div className="flex justify-between gap-4">
+          <dt className="text-ash">Role</dt>
+          <dd className="font-medium">
+            <span
+              className={cn(
+                'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-label',
+                isAdmin ? 'bg-ink text-white' : 'bg-line text-ink',
+              )}
+            >
+              {isAdmin ? (
+                <>
+                  <ShieldCheck size={11} strokeWidth={2} />
+                  Administrator
+                </>
+              ) : (
+                'Customer'
+              )}
+            </span>
+          </dd>
         </div>
         <div className="flex justify-between gap-4">
           <dt className="text-ash">Member since</dt>
@@ -354,7 +409,46 @@ function SignedIn({ user, onClose, onSignOut }) {
         </div>
       </dl>
 
-      <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+      {/* Admin Quick Action */}
+      {isAdmin && onOpenInventory && (
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={() => {
+              onClose()
+              onOpenInventory()
+            }}
+            className="btn-dark w-full flex items-center justify-center gap-2 py-2.5 text-xs font-semibold uppercase tracking-label"
+          >
+            <Boxes size={15} strokeWidth={1.8} />
+            Open Inventory System
+          </button>
+        </div>
+      )}
+
+      {/* Role Switcher */}
+      <div className="mt-3 flex items-center justify-center gap-2 text-[10px] text-ash">
+        <span>Switch demo role:</span>
+        {isAdmin ? (
+          <button
+            type="button"
+            onClick={() => signInAsDemo('customer')}
+            className="font-semibold text-ink underline underline-offset-2 hover:text-accent"
+          >
+            Switch to Customer
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => signInAsDemo('admin')}
+            className="font-semibold text-ink underline underline-offset-2 hover:text-accent"
+          >
+            Switch to Admin
+          </button>
+        )}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row">
         <button type="button" onClick={onClose} className="btn-dark flex-1">
           Continue shopping
         </button>
@@ -369,8 +463,8 @@ function SignedIn({ user, onClose, onSignOut }) {
 function Spinner() {
   return (
     <svg className="animate-spin" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.25" />
-      <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="9" strokeWidth="3" stroke="currentColor" fill="none" opacity="0.25" />
+      <path d="M21 12a9 9 0 0 0-9-9" strokeWidth="3" stroke="currentColor" fill="none" strokeLinecap="round" />
     </svg>
   )
 }

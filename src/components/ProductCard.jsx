@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Heart, Check, Plus } from 'lucide-react'
 import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
+import { useInventory } from '../context/InventoryContext.jsx'
 import { formatPrice, discountPercent, cn } from '../lib/utils.js'
 
 /**
@@ -14,11 +15,14 @@ export default function ProductCard({ product, priority = false }) {
   const [justAdded, setJustAdded] = useState(false)
   const { addItem } = useCart()
   const wishlist = useWishlist()
+  const { isOutOfStock } = useInventory()
 
+  const outOfStock = isOutOfStock(product.id)
   const isSaved = wishlist.has(product.id)
   const percentOff = discountPercent(product.price, product.originalPrice)
 
   const quickAdd = (size) => {
+    if (outOfStock) return
     addItem(product, { size })
     setJustAdded(true)
     window.setTimeout(() => {
@@ -52,12 +56,18 @@ export default function ProductCard({ product, priority = false }) {
 
         {/* Badges */}
         <div className="pointer-events-none absolute left-3 top-3 flex flex-col items-start gap-1.5">
-          {product.badge && (
+          {outOfStock ? (
             <span className="bg-ink px-2 py-1 text-[9px] font-semibold uppercase tracking-label text-white">
-              {product.badge}
+              Sold Out
             </span>
+          ) : (
+            product.badge && (
+              <span className="bg-ink px-2 py-1 text-[9px] font-semibold uppercase tracking-label text-white">
+                {product.badge}
+              </span>
+            )
           )}
-          {percentOff > 0 && (
+          {percentOff > 0 && !outOfStock && (
             <span className="bg-white/90 px-2 py-1 text-[9px] font-semibold uppercase tracking-label text-ink">
               −{percentOff}%
             </span>
@@ -93,7 +103,11 @@ export default function ProductCard({ product, priority = false }) {
             'md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100',
           )}
         >
-          {justAdded ? (
+          {outOfStock ? (
+            <p className="flex items-center justify-center bg-off/90 py-2.5 text-[10px] font-semibold uppercase tracking-label text-ash backdrop-blur-sm">
+              Sold Out
+            </p>
+          ) : justAdded ? (
             <p className="flex items-center justify-center gap-2 bg-ink py-2.5 text-[10px] font-semibold uppercase tracking-label text-white">
               <Check size={13} strokeWidth={2} aria-hidden="true" />
               Added

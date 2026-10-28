@@ -4,6 +4,7 @@ import { useOverlay } from '../hooks/useOverlay.js'
 import { useCheckout } from '../context/CheckoutContext.jsx'
 import { useCart } from '../context/CartContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useInventory } from '../context/InventoryContext.jsx'
 import { FREE_SHIPPING_THRESHOLD } from '../data/site.js'
 import { formatPrice, cn } from '../lib/utils.js'
 
@@ -18,14 +19,15 @@ const SHIPPING = {
  * Three-step demo checkout (contact → delivery → confirmation).
  *
  * Nothing is sent anywhere and no card field exists: the payment row is a static
- * list of accepted brands. Placing the order clears the cart, so the button
- * changes real state rather than just closing a dialog.
+ * list of accepted brands. Placing the order clears the cart and decrements
+ * inventory stock, so the button changes real state rather than just closing a dialog.
  */
 export default function CheckoutModal() {
   const panelRef = useRef(null)
   const checkout = useCheckout()
   const { items, subtotal, clearCart } = useCart()
   const { user } = useAuth()
+  const { decrementStock } = useInventory()
   const [errors, setErrors] = useState({})
 
   useOverlay(checkout.isOpen, panelRef, checkout.closeCheckout)
@@ -65,6 +67,7 @@ export default function CheckoutModal() {
   }
 
   const onPlaceOrder = () => {
+    decrementStock(items)
     checkout.next() // sets the reference and moves to 'done'
     clearCart()
   }

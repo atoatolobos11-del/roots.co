@@ -4,28 +4,44 @@ const AuthContext = createContext(null)
 
 const STORAGE_KEY = 'rootco.session.v1'
 
+export const DEMO_ACCOUNTS = {
+  admin: {
+    email: 'admin@roots.co',
+    name: 'Admin ROOT.CO',
+    role: 'admin',
+    password: 'adminPassword1',
+  },
+  customer: {
+    email: 'customer@roots.co',
+    name: 'Eleanor Vance',
+    role: 'customer',
+    password: 'customerPassword1',
+  },
+}
+
 /**
- * Client-only demo session.
+ * Client-only demo session with role-based access control.
  *
  * There is no backend: sign-up and sign-in validate input, then persist a
- * session object to localStorage. Nothing is verified, no password is stored
- * beyond a fake hash, and no request leaves the browser. Swapping this for a
- * real API means replacing the two async calls below and nothing else.
+ * session object to localStorage. Swapping this for a real API means replacing
+ * the async calls below and nothing else.
  */
 function readStoredSession() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : null
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    // Migrate old sessions without role
+    if (parsed && !parsed.role) {
+      parsed.role = parsed.email?.toLowerCase().startsWith('admin@') ? 'admin' : 'customer'
+    }
+    return parsed
   } catch {
-    // Private browsing or a corrupted entry: treat as signed out rather than
-    // letting a parse error take the whole app down.
     return null
   }
 }
 
 function fakeHash(value) {
-  // Not a real hash. It exists only so the demo never writes a plaintext
-  // password into localStorage, where it would be trivially readable.
   let out = 0
   for (let i = 0; i < value.length; i += 1) {
     out = (out * 31 + value.charCodeAt(i)) | 0
@@ -62,10 +78,13 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signUp = useCallback(
-    async ({ name, email }) => {
+    async ({ name, email, role }) => {
+      const emailClean = email.trim().toLowerCase()
+      const assignedRole = role || (emailClean.startsWith('admin@') ? 'admin' : 'customer')
       const session = {
         name: name.trim(),
-        email: email.trim().toLowerCase(),
+        email: emailClean,
+        role: assignedRole,
         joinedAt: new Date().toISOString(),
       }
       persist(session)
@@ -75,14 +94,34 @@ export function AuthProvider({ children }) {
   )
 
   const signIn = useCallback(
-    async ({ email }) => {
-      // No credential check - there is nothing to check against. Deriving the
-      // name from the email keeps the header plausible without inventing data.
-      const local = email.split('@')[0].replace(/[._-]+/g, ' ')
-      const name = local.replace(/\b\w/g, (c) => c.toUpperCase())
+    async ({ email, role }) => {
+      const emailClean = email.trim().toLowerCase()
+      const assignedRole = role || (emailClean.startsWith('admin@') ? 'admin' : 'customer')
+      const local = emailClean.split('@')[0].replace(/[._-]+/g, ' ')
+      const name =
+        assignedRole === 'admin' && !local.includes(' ')
+          ? 'Admin ROOT.CO'
+          : local.replace(/\b\w/g, (c) => c.toUpperCase())
+
       const session = {
-        name: name || 'Member',
-        email: email.trim().toLowerCase(),
+        name: name || (assignedRole === 'admin' ? 'Admin' : 'Member'),
+        email: emailClean,
+        role: assignedRole,
+        joinedAt: new Date().toISOString(),
+      }
+      persist(session)
+      return session
+    },
+    [persist],
+  )
+
+  const signInAsDemo = useCallback(
+    async (role = 'admin') => {
+      const account = DEMO_ACCOUNTS[role] || DEMO_ACCOUNTS.customer
+      const session = {
+        name: account.name,
+        email: account.email,
+        role: account.role,
         joinedAt: new Date().toISOString(),
       }
       persist(session)
@@ -100,9 +139,20 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  const isAdmin = Boolean(user && user.role === 'admin')
+
   const value = useMemo(
-    () => ({ user, isReady, isAuthenticated: Boolean(user), signUp, signIn, signOut }),
-    [user, isReady, signUp, signIn, signOut],
+    () => ({
+      user,
+      isAdmin,
+      isReady,
+      isAuthenticated: Boolean(user),
+      signUp,
+      signIn,
+      signInAsDemo,
+      signOut,
+    }),
+    [user, isAdmin, isReady, signUp, signIn, signInAsDemo, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
@@ -130,8 +180,6 @@ export const authRules = {
   email: {
     label: 'Email',
     autoComplete: 'email',
-    // Deliberately permissive: the goal is to catch typos, not to enforce
-    // RFC 5322. A strict pattern rejects valid real addresses.
     validate: (value) => {
       const v = value.trim()
       if (!v) return 'Enter your email'

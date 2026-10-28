@@ -13,6 +13,7 @@
     "test:account": "node scripts/test-account.mjs",
     "test:account:flow": "node scripts/test-account-flow.mjs",
     "test:interactions": "node scripts/test-interactions.mjs",
+    "test:inventory": "node scripts/test-inventory.mjs",
     "generate:assets": "node scripts/generate-assets.mjs",
     "set:url": "node scripts/set-site-url.mjs",
     "check:url": "node scripts/check-site-url.mjs",

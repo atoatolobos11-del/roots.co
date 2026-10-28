@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { X, Search, Heart, User, ShoppingBag, ArrowUpRight } from 'lucide-react'
+import { X, Search, Heart, User, ShoppingBag, ArrowUpRight, Boxes } from 'lucide-react'
 import Wordmark from './Wordmark.jsx'
 import { navLinks } from '../data/site.js'
 import { useOverlay } from '../hooks/useOverlay.js'
@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
 import { useShop } from '../context/ShopContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useInventory } from '../context/InventoryContext.jsx'
 import { cn } from '../lib/utils.js'
 
 const quickLinks = [
@@ -17,12 +18,13 @@ const quickLinks = [
 ]
 
 /** Slide-in navigation drawer for small screens (PRD §4.2). */
-export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount }) {
+export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount, onOpenInventory }) {
   const panelRef = useRef(null)
   const { openCart, count } = useCart()
   const wishlist = useWishlist()
   const { openSearch, activeFilter } = useShop()
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
+  const { stats } = useInventory()
 
   useOverlay(open, panelRef, onClose)
 
@@ -60,6 +62,30 @@ export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount })
         </div>
 
         <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-5 py-6">
+          {/* Admin Inventory banner - only visible when logged in as admin */}
+          {isAdmin && (
+            <div className="mb-6 rounded-xl border border-line bg-mist/50 p-3">
+              <button
+                type="button"
+                onClick={() => {
+                  onClose()
+                  if (onOpenInventory) onOpenInventory()
+                }}
+                className="flex w-full items-center justify-between rounded-lg bg-ink px-3 py-2.5 text-[11px] font-semibold uppercase tracking-label text-white transition-colors duration-200 hover:bg-neutral-800"
+              >
+                <span className="flex items-center gap-2">
+                  <Boxes size={15} strokeWidth={1.8} />
+                  Inventory System
+                </span>
+                {stats.lowStockCount + stats.outOfStockCount > 0 && (
+                  <span className="rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-bold text-white">
+                    {stats.lowStockCount + stats.outOfStockCount} alerts
+                  </span>
+                )}
+              </button>
+            </div>
+          )}
+
           <ul className="divide-y divide-line">
             {navLinks.map((link) => (
               <li key={link.label}>
@@ -119,12 +145,17 @@ export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount })
             >
               <ShoppingBag size={17} strokeWidth={1.5} /> Bag ({count})
             </DrawerAction>
-            <DrawerAction>
+            <DrawerAction
+              onClick={() => {
+                onClose()
+                document.querySelector('#new-arrivals')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
               <Heart size={17} strokeWidth={1.5} /> Saved ({wishlist.count})
             </DrawerAction>
             <DrawerAction onClick={onOpenAccount}>
               <User size={17} strokeWidth={1.5} className={cn(user && 'fill-ink')} />
-              {user ? 'Account' : 'Sign in'}
+              {user ? (isAdmin ? 'Admin' : 'Account') : 'Sign in'}
             </DrawerAction>
           </div>
         </div>

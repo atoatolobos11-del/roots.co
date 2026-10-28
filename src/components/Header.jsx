@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, Search, ShoppingBag, User, Heart } from 'lucide-react'
+import { Menu, Search, ShoppingBag, User, Heart, Boxes } from 'lucide-react'
 import Wordmark from './Wordmark.jsx'
 import MobileMenu from './MobileMenu.jsx'
 import SearchOverlay from './SearchOverlay.jsx'
@@ -9,6 +9,7 @@ import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
 import { useShop } from '../context/ShopContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useInventory } from '../context/InventoryContext.jsx'
 import { cn } from '../lib/utils.js'
 
 /** Sticky main navigation (PRD §4.2). */
@@ -18,7 +19,8 @@ export default function Header() {
   const { count, openCart } = useCart()
   const wishlist = useWishlist()
   const { applyFilter, openSearch, isSearchOpen, activeFilter } = useShop()
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
+  const { openInventory, stats } = useInventory()
 
   const goTo = (event, link) => {
     event.preventDefault()
@@ -81,7 +83,25 @@ export default function Header() {
             </nav>
 
             {/* Right — utilities */}
-            <div className="flex items-center justify-end gap-0.5">
+            <div className="flex items-center justify-end gap-1 sm:gap-1.5">
+              {/* Admin-only inventory button — completely hidden from regular shop customers */}
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={openInventory}
+                  aria-label="Open Inventory Management"
+                  className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-ink bg-ink px-3 py-1.5 text-[10px] font-semibold uppercase tracking-label text-white shadow-sm transition-all duration-200 hover:bg-neutral-800"
+                >
+                  <Boxes size={14} strokeWidth={1.75} />
+                  <span>Inventory</span>
+                  {stats.lowStockCount + stats.outOfStockCount > 0 && (
+                    <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-white">
+                      {stats.lowStockCount + stats.outOfStockCount}
+                    </span>
+                  )}
+                </button>
+              )}
+
               <IconButton label="Search products" onClick={openSearch} className="hidden sm:inline-flex">
                 <Search size={18} strokeWidth={1.5} />
               </IconButton>
@@ -120,9 +140,20 @@ export default function Header() {
           setIsMenuOpen(false)
           setIsAccountOpen(true)
         }}
+        onOpenInventory={() => {
+          setIsMenuOpen(false)
+          openInventory()
+        }}
       />
       <SearchOverlay open={isSearchOpen} />
-      <AccountModal open={isAccountOpen} onClose={() => setIsAccountOpen(false)} />
+      <AccountModal
+        open={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+        onOpenInventory={() => {
+          setIsAccountOpen(false)
+          openInventory()
+        }}
+      />
     </>
   )
 }

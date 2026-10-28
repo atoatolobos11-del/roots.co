@@ -13,10 +13,12 @@ import Footer from '../components/Footer.jsx'
 import CartDrawer from '../components/CartDrawer.jsx'
 import InfoModal from '../components/InfoModal.jsx'
 import CheckoutModal from '../components/CheckoutModal.jsx'
+import InventoryModal from '../components/InventoryModal.jsx'
 import { CartProvider } from '../context/CartContext.jsx'
 import { WishlistProvider } from '../context/WishlistContext.jsx'
 import { ShopProvider } from '../context/ShopContext.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
+import { InventoryProvider } from '../context/InventoryContext.jsx'
 import { InfoProvider } from '../context/InfoContext.jsx'
 import { CheckoutProvider } from '../context/CheckoutContext.jsx'
 
@@ -28,43 +30,46 @@ import { CheckoutProvider } from '../context/CheckoutContext.jsx'
 export default function Home() {
   return (
     <AuthProvider>
-      <WishlistProvider>
-        <CartProvider>
-          <ShopProvider>
-            <InfoProvider>
-              <CheckoutProvider>
-                <a
-                  href="#main"
-                  className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-ink focus:px-4 focus:py-2 focus:text-[11px] focus:font-semibold focus:uppercase focus:tracking-label focus:text-white"
-                >
-                  Skip to content
-                </a>
+      <InventoryProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <ShopProvider>
+              <InfoProvider>
+                <CheckoutProvider>
+                  <a
+                    href="#main"
+                    className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-ink focus:px-4 focus:py-2 focus:text-[11px] focus:font-semibold focus:uppercase focus:tracking-label focus:text-white"
+                  >
+                    Skip to content
+                  </a>
 
-                <AnnouncementBar />
-                <Header />
+                  <AnnouncementBar />
+                  <Header />
 
-                <main id="main">
-                  <Hero />
-                  <BenefitsBar />
-                  <CategorySection />
-                  <ProductSection />
-                  <PromoSection />
-                  <CollectionSection />
-                  <EditorialBand />
-                </main>
+                  <main id="main">
+                    <Hero />
+                    <BenefitsBar />
+                    <CategorySection />
+                    <ProductSection />
+                    <PromoSection />
+                    <CollectionSection />
+                    <EditorialBand />
+                  </main>
 
-                <Footer />
+                  <Footer />
 
-                <ChatWidget />
-                <BackToTop />
-                <CartDrawer />
-                <InfoModal />
-                <CheckoutModal />
-              </CheckoutProvider>
-            </InfoProvider>
-          </ShopProvider>
-        </CartProvider>
-      </WishlistProvider>
+                  <ChatWidget />
+                  <BackToTop />
+                  <CartDrawer />
+                  <InfoModal />
+                  <CheckoutModal />
+                  <InventoryModal />
+                </CheckoutProvider>
+              </InfoProvider>
+            </ShopProvider>
+          </CartProvider>
+        </WishlistProvider>
+      </InventoryProvider>
     </AuthProvider>
   )
 }
