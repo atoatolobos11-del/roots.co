@@ -62,29 +62,7 @@ export default function MobileMenu({ open, onClose, onNavigate, onOpenAccount, o
         </div>
 
         <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-5 py-6">
-          {/* Admin Inventory banner - only visible when logged in as admin */}
-          {isAdmin && (
-            <div className="mb-6 rounded-xl border border-line bg-mist/50 p-3">
-              <button
-                type="button"
-                onClick={() => {
-                  onClose()
-                  if (onOpenInventory) onOpenInventory()
-                }}
-                className="flex w-full items-center justify-between rounded-lg bg-ink px-3 py-2.5 text-[11px] font-semibold uppercase tracking-label text-white transition-colors duration-200 hover:bg-neutral-800"
-              >
-                <span className="flex items-center gap-2">
-                  <Boxes size={15} strokeWidth={1.8} />
-                  Inventory System
-                </span>
-                {stats.lowStockCount + stats.outOfStockCount > 0 && (
-                  <span className="rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-bold text-white">
-                    {stats.lowStockCount + stats.outOfStockCount} alerts
-                  </span>
-                )}
-              </button>
-            </div>
-          )}
+
 
           <ul className="divide-y divide-line">
             {navLinks.map((link) => (
