@@ -29,7 +29,7 @@ export const benefits = [
   },
   { icon: 'RotateCcw', title: 'Easy Returns', text: '30-day return policy' },
   { icon: 'Lock', title: 'Secure Payment', text: '100% secure checkout' },
-  { icon: 'MapPin', title: 'Stores Near You', text: 'Find a ROOT.CO store' },
+  { icon: 'MapPin', title: 'Stores Near You', text: 'Find a ROOTS.CO store' },
 ]
 
 /** Promotional card row (PRD §11). */
@@ -64,7 +64,7 @@ export const promos = [
     alt: 'Black structured leather tote photographed on a white studio background',
     kicker: 'Visit Us',
     title: ['Visit us', 'in store'],
-    text: 'Find a ROOT.CO store near you.',
+    text: 'Find a ROOTS.CO store near you.',
     cta: 'Find a Store',
     topic: 'stores',
   },

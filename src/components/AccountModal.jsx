@@ -125,7 +125,7 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
               <div className="absolute inset-0 flex items-end justify-between px-6 pb-4">
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-label text-white/60">
-                    ROOT.CO account
+                    ROOTS.CO account
                   </p>
                   <h2
                     id="account-title"
@@ -247,7 +247,7 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
               </button>
 
               <p className="text-center text-[11px] text-ash">
-                {isSignUp ? 'Already have an account?' : 'New to ROOT.CO?'}{' '}
+                {isSignUp ? 'Already have an account?' : 'New to ROOTS.CO?'}{' '}
                 <button
                   type="button"
                   onClick={() => setMode(isSignUp ? 'signin' : 'signup')}

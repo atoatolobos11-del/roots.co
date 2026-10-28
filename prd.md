@@ -1,4 +1,4 @@
-# ROOT.CO — Fashion E-Commerce Portfolio
+# ROOTS.CO — Fashion E-Commerce Portfolio
 
 > Project requirement document. Implementation notes live in `README.md`.
 
@@ -6,9 +6,9 @@
 
 | | |
 | --- | --- |
-| **Project name** | ROOT.CO |
+| **Project name** | ROOTS.CO |
 | **Type** | Responsive fashion e-commerce portfolio website |
-| **Purpose** | Recreate the UI structure, layout, spacing, typography hierarchy, product presentation and overall visual experience of a ROOT.CO reference design as an original portfolio project |
+| **Purpose** | Recreate the UI structure, layout, spacing, typography hierarchy, product presentation and overall visual experience of a ROOTS.CO reference design as an original portfolio project |
 | **Deployment** | Vercel |
 | **Version control** | Git + GitHub |
 | **Containerization** | Docker |
@@ -67,7 +67,7 @@ Very thin black bar at the very top. Black background, small white uppercase cen
 
 ### 4.2 Main Navigation
 
-- **Left** — minimalist `ROOT.CO` wordmark.
+- **Left** — minimalist `ROOTS.CO` wordmark.
 - **Centre (desktop)** — NEW IN, WOMEN, MEN, SHOES, ACCESSORIES, SALE.
 - **Right** — search, account, wishlist and shopping bag, using Lucide icons.
 - **Desktop** — full horizontal nav, centred menu, utility icons right.
@@ -275,7 +275,7 @@ must not complicate the Vercel deployment.
 ```bash
 git init
 git add .
-git commit -m "Initial ROOT.CO portfolio"
+git commit -m "Initial ROOTS.CO portfolio"
 git branch -M main
 git remote add origin YOUR_GITHUB_REPOSITORY
 git push -u origin main
@@ -311,7 +311,7 @@ contrast.
 
 ## 32. SEO Basics
 
-Page title `ROOT.CO — Modern Fashion & Everyday Essentials`, meta description, Open Graph
+Page title `ROOTS.CO — Modern Fashion & Everyday Essentials`, meta description, Open Graph
 metadata, descriptive image alt text and semantic headings.
 
 ## 33. Suggested Folder Structure
@@ -371,7 +371,7 @@ root-co/
 
 ## 36. Portfolio Presentation
 
-**ROOT.CO — Modern Fashion E-Commerce UI.** A responsive fashion e-commerce interface built with
+**ROOTS.CO — Modern Fashion E-Commerce UI.** A responsive fashion e-commerce interface built with
 React and Tailwind CSS, featuring reusable product components, category filtering, wishlist and
 cart interactions, responsive navigation and a premium editorial shopping experience.
 
@@ -389,7 +389,7 @@ match the composition:
 ```
 BLACK ANNOUNCEMENT BAR
         ↓
-ROOT.CO NAVIGATION
+ROOTS.CO NAVIGATION
         ↓
 LARGE FASHION HERO
         ↓

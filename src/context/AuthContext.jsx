@@ -7,7 +7,7 @@ const STORAGE_KEY = 'rootco.session.v1'
 export const DEMO_ACCOUNTS = {
   admin: {
     email: 'admin@roots.co',
-    name: 'Admin ROOT.CO',
+    name: 'Admin ROOTS.CO',
     role: 'admin',
     password: 'adminPassword1',
   },
@@ -96,7 +96,7 @@ export function AuthProvider({ children }) {
       const local = emailClean.split('@')[0].replace(/[._-]+/g, ' ')
       const name =
         assignedRole === 'admin' && !local.includes(' ')
-          ? 'Admin ROOT.CO'
+          ? 'Admin ROOTS.CO'
           : local.replace(/\b\w/g, (c) => c.toUpperCase())
 
       const session = {

@@ -47,7 +47,7 @@ export const infoTopics = {
       { q: 'How do I find my size?', a: 'Every product page lists measurements in centimetres alongside the size label. See the size guide for how to measure.' },
       { q: 'Are your products genuinely leather?', a: 'Bags and shoes are full-grain leather that develops a patina over time. Everything else is cotton, linen or merino.' },
       { q: 'Can I change my order after placing it?', a: 'Within one hour. After that it is picked and packed, so start a return instead.' },
-      { q: 'Is this a real shop?', a: 'No. ROOT.CO is a portfolio project — no orders are placed and no payments are taken.' },
+      { q: 'Is this a real shop?', a: 'No. ROOTS.CO is a portfolio project — no orders are placed and no payments are taken.' },
     ],
   },
 
@@ -101,7 +101,7 @@ export const infoTopics = {
 
   story: {
     title: 'Our story',
-    intro: 'ROOT.CO started as a way to wear fewer things better.',
+    intro: 'ROOTS.CO started as a way to wear fewer things better.',
     entries: [
       { q: '2021', a: 'Founded in a Brooklyn spare room with 40 products and one wool coat.' },
       { q: 'Today', a: 'Eleven stores, a fixed palette, and a repair programme for everything we have ever made.' },

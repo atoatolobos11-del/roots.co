@@ -47,7 +47,7 @@ export default function ChatWidget() {
       {/* Chat card */}
       <div
         role="dialog"
-        aria-label="ROOT.CO support chat"
+        aria-label="ROOTS.CO support chat"
         aria-hidden={!isOpen}
         className={cn(
           'pointer-events-auto w-[min(19rem,calc(100vw-2rem))] origin-bottom-right overflow-hidden border border-line bg-white shadow-lg',
@@ -62,7 +62,7 @@ export default function ChatWidget() {
             </span>
             <span>
               <span className="block text-[11px] font-semibold uppercase tracking-label">
-                ROOT.CO Support
+                ROOTS.CO Support
               </span>
               <span className="mt-0.5 block text-[10px] text-white/60">{supportHours}</span>
             </span>

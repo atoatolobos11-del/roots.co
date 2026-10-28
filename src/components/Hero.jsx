@@ -19,7 +19,7 @@ export default function Hero() {
         <source media="(max-width: 767px)" srcSet="/images/photos/hero-rail.jpg" />
         <img
           src="/images/photos/hero-rail.jpg"
-          alt="Rail of cream and camel wool coats hanging in a ROOT.CO store"
+          alt="Rail of cream and camel wool coats hanging in a ROOTS.CO store"
           width="2000"
           height="1125"
           fetchPriority="high"
@@ -47,7 +47,7 @@ export default function Hero() {
             confidence
           </h1>
           <p className="mt-5 max-w-sm text-[13px] leading-relaxed text-white/75 sm:text-sm">
-            ROOT.CO has everything you need to look and feel your best — considered neutrals,
+            ROOTS.CO has everything you need to look and feel your best — considered neutrals,
             everyday essentials and new-season tailoring.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">

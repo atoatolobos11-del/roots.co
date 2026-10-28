@@ -1,4 +1,4 @@
-# ROOT.CO — Modern Fashion E-Commerce UI
+# ROOTS.CO — Modern Fashion E-Commerce UI
 
 A responsive fashion e-commerce interface built with **React**, **Node.js** and **Tailwind CSS**,
 created as a portfolio project. It features reusable product components, category filtering,
@@ -214,7 +214,7 @@ caching for hashed assets and fonts, and SPA fallback. Vercel ignores the Docker
 ```bash
 git init
 git add .
-git commit -m "feat: initial ROOT.CO portfolio"
+git commit -m "feat: initial ROOTS.CO portfolio"
 git branch -M main
 git remote add origin https://github.com/<user>/root-co.git
 git push -u origin main

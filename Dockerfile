@@ -16,7 +16,7 @@ RUN npm run build
 
 # ---------- 3. Serve the static build ----------
 FROM nginx:1.27-alpine AS runtime
-LABEL org.opencontainers.image.title="ROOT.CO" \
+LABEL org.opencontainers.image.title="ROOTS.CO" \
       org.opencontainers.image.description="Responsive fashion e-commerce portfolio UI (React + Tailwind CSS)"
 
 COPY --from=build /app/dist /usr/share/nginx/html
@@ -29,3 +29,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
   CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
+

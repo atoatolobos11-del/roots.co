@@ -1,4 +1,4 @@
-/** Small shared helpers used across the ROOT.CO UI. */
+/** Small shared helpers used across the ROOTS.CO UI. */
 
 /** Join conditional class names (tiny `clsx` replacement — no dependency needed). */
 export function cn(...parts) {

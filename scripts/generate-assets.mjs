@@ -1,5 +1,5 @@
 /**
- * ROOT.CO — original asset generator
+ * ROOTS.CO — original asset generator
  * ------------------------------------------------------------------
  * Every image shipped with this portfolio is generated here as original
  * vector artwork (SVG) so the project contains zero third-party or
@@ -8,7 +8,7 @@
  *   npm run generate:assets
  *
  * Art direction: flat tonal "lookbook" illustration on neutral studio
- * backgrounds — minimalist, editorial, on-brand with the ROOT.CO palette.
+ * backgrounds — minimalist, editorial, on-brand with the ROOTS.CO palette.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -699,7 +699,7 @@ for (const [slug, art, clothIdx, tone] of COLLECTIONS) {
     <rect x="96" y="150" width="1008" height="594" fill="#1C1917" opacity="0.07"/>
     <rect x="112" y="166" width="976" height="578" fill="#F8F5EF" opacity="0.8"/>
     <rect x="112" y="166" width="976" height="96" fill="#1C1917" opacity="0.9"/>
-    <text x="600" y="228" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="14" fill="#F8F5EF">ROOT.CO</text>
+    <text x="600" y="228" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="14" fill="#F8F5EF">ROOTS.CO</text>
     <path fill="#1C1917" opacity="0.12" d="M112 262h976l40 96H72z"/>
     ${Array.from({ length: 11 }, (_, i) => `<rect x="${80 + i * 96}" y="358" width="48" height="96" fill="#F8F5EF" opacity="${i % 2 ? 0.85 : 0.6}"/>`).join('')}
     <path fill="#1C1917" opacity="0.14" d="M72 454h1056l-10 26H82z"/>

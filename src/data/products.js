@@ -1,5 +1,5 @@
 /**
- * Demo catalogue for the ROOT.CO portfolio build.
+ * Demo catalogue for the ROOTS.CO portfolio build.
  *
  * Product names and taglines are written to match the actual photograph, not
  * the other way round: a rail of cream coats is called a coat rail, not
