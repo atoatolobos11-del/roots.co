@@ -10,7 +10,7 @@ export default function Wordmark({ className, ...props }) {
       )}
       {...props}
     >
-      ROOT.CO
+      ROOTS.CO
     </span>
   )
 }
