@@ -82,7 +82,17 @@ export function InventoryProvider({ children }) {
   const openInventory = useCallback(() => setIsInventoryOpen(true), [])
   const closeInventory = useCallback(() => setIsInventoryOpen(false), [])
 
-  const safeInventory = Array.isArray(inventory) ? inventory : DEFAULT_INVENTORY
+  const safeInventory = Array.isArray(inventory)
+    ? inventory.map((item) => {
+        const product = products.find((entry) => entry.id === item.id)
+        const price = item.price ?? product?.price ?? 0
+        return {
+          ...item,
+          price,
+          cost: item.cost ?? Math.round(price * 0.45),
+        }
+      })
+    : DEFAULT_INVENTORY
 
   const getStock = useCallback(
     (id) => {
@@ -182,8 +192,8 @@ export function InventoryProvider({ children }) {
           sku,
           name: newItem.name || 'New Product',
           category: newItem.category || 'Accessories',
-          price: Number(newItem.price) || 99,
-          cost: Number(newItem.cost) || Math.round((Number(newItem.price) || 99) * 0.45),
+          price: Number(newItem.price) || 990,
+          cost: Number(newItem.cost) || Math.round((Number(newItem.price) || 990) * 0.45),
           stock: Math.max(0, parseInt(newItem.stock, 10) || 10),
           lowStockThreshold: Number(newItem.lowStockThreshold) || 5,
           image: newItem.image || '/images/photos/structured-leather-tote.jpg',

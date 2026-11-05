@@ -2,10 +2,10 @@ import { Leaf, Scale, Users, Hammer } from 'lucide-react'
 
 /** Everything content-driven that is not a product: nav, copy, promo blocks. */
 
-export const FREE_SHIPPING_THRESHOLD = 75
+export const FREE_SHIPPING_THRESHOLD = 2500
 
 export const announcementMessages = [
-  `Free shipping on orders over $${FREE_SHIPPING_THRESHOLD}`,
+  `Free shipping on orders over ₱${FREE_SHIPPING_THRESHOLD}`,
   'New season drop — up to 50% off selected styles',
   '30-day free returns on every order',
 ]
@@ -25,7 +25,7 @@ export const benefits = [
   {
     icon: 'Truck',
     title: 'Free Shipping',
-    text: `On orders over $${FREE_SHIPPING_THRESHOLD}`,
+    text: `On orders over ₱${FREE_SHIPPING_THRESHOLD}`,
   },
   { icon: 'RotateCcw', title: 'Easy Returns', text: '30-day return policy' },
   { icon: 'Lock', title: 'Secure Payment', text: '100% secure checkout' },
@@ -37,8 +37,8 @@ export const promos = [
   {
     id: 'student',
     variant: 'dark',
-    image: '/images/photos/banner-satchel.jpg',
-    alt: 'Worn brown leather satchel bag resting on a stone bench',
+    image: '/hero/18.jpg',
+    alt: 'Black Roots.CO graphic tee styled in a minimal studio campaign shot',
     kicker: 'Student Discount',
     title: ['Students get', '10% off'],
     text: 'Verify with your student email and take 10% off your first order.',
@@ -48,8 +48,8 @@ export const promos = [
   {
     id: 'new-season',
     variant: 'light',
-    image: '/images/photos/banner-puffer.jpg',
-    alt: 'Rust coloured quilted puffer jacket on a white mannequin',
+    image: '/hero/16.jpg',
+    alt: 'Roots.CO hoodie campaign shot in a dark studio look',
     kicker: 'Autumn / Winter',
     title: ['New season', 'new look'],
     text: 'Relaxed tailoring and warm neutrals, restated for the season ahead.',
@@ -60,8 +60,8 @@ export const promos = [
   {
     id: 'store',
     variant: 'image',
-    image: '/images/photos/banner-tote.jpg',
-    alt: 'Black structured leather tote photographed on a white studio background',
+    image: '/hero/8.jpg',
+    alt: 'Roots.CO graphic tee campaign image for the in-store promo card',
     kicker: 'Visit Us',
     title: ['Visit us', 'in store'],
     text: 'Find a ROOTS.CO store near you.',

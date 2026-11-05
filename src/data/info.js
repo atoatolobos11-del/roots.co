@@ -19,11 +19,11 @@ export const infoTopics = {
 
   shipping: {
     title: 'Shipping',
-    intro: 'Free standard shipping on orders over $75.',
+    intro: 'Free standard shipping on orders over ₱2,500.',
     entries: [
-      { q: 'Standard', a: '3–5 business days. Free over $75, otherwise $6.' },
-      { q: 'Express', a: '1–2 business days. $14 flat rate.' },
-      { q: 'Next day', a: 'Order before 2pm ET for next business day. $24.' },
+      { q: 'Standard', a: '3–5 business days. Free over ₱2,500, otherwise ₱150.' },
+      { q: 'Express', a: '1–2 business days. ₱300 flat rate.' },
+      { q: 'Next day', a: 'Order before 2pm for next business day. ₱500.' },
       { q: 'International', a: '7–14 business days. Duties calculated at checkout.' },
     ],
   },

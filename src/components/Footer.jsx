@@ -65,7 +65,7 @@ export default function Footer() {
             Modern fashion and everyday essentials, designed to last. New drops every Thursday.
           </p>
           <p className="mt-5 text-[11px] text-white/40">
-            Free shipping over ${FREE_SHIPPING_THRESHOLD} · 30-day returns
+            Free shipping over ₱{FREE_SHIPPING_THRESHOLD} · 30-day returns
           </p>
         </div>
 

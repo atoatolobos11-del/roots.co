@@ -8,6 +8,7 @@ import { cn } from '../lib/utils.js'
 export default function PromoCard({ promo, onNavigate, className }) {
   const isDark = promo.variant === 'dark'
   const isImage = promo.variant === 'image'
+  const isLight = !isDark && !isImage
 
   return (
     <article
@@ -24,7 +25,11 @@ export default function PromoCard({ promo, onNavigate, className }) {
         height="900"
         loading="lazy"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-[1.03]"
+        className={cn(
+          'absolute inset-0 h-full w-full transition-transform duration-700 ease-soft',
+          isLight ? 'scale-[0.78] object-contain object-center' : 'object-cover group-hover:scale-[1.03]',
+          isLight && 'group-hover:scale-[0.82]',
+        )}
       />
 
       {/* Legibility scrim — heavy for the photographic cards, light for the editorial one */}

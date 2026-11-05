@@ -5,12 +5,13 @@ export function cn(...parts) {
   return parts.flat(Infinity).filter(Boolean).join(' ')
 }
 
-/** Format a numeric price as USD, e.g. 29.9 → "$29.90" */
+/** Format a numeric price in Philippine pesos, e.g. 499 → "₱499". */
 export function formatPrice(value) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
+    currency: 'PHP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(value)
 }
 

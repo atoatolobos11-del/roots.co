@@ -10,9 +10,9 @@ import { formatPrice, cn } from '../lib/utils.js'
 
 /** Base rates; standard goes free at the threshold, checked where it is used. */
 const SHIPPING = {
-  standard: { label: 'Standard', detail: '3–5 business days', price: 6 },
-  express: { label: 'Express', detail: '1–2 business days', price: 14 },
-  priority: { label: 'Priority', detail: 'Next business day', price: 24 },
+  standard: { label: 'Standard', detail: '3–5 business days', price: 150 },
+  express: { label: 'Express', detail: '1–2 business days', price: 300 },
+  priority: { label: 'Priority', detail: 'Next business day', price: 500 },
 }
 
 /**
