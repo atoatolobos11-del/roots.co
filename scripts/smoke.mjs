@@ -27,7 +27,7 @@ const checks = [
   { file: '/src/components/Hero.jsx', name: 'Hero' },
   { file: '/src/components/CartDrawer.jsx', name: 'CartDrawer' },
   { file: '/src/components/SearchOverlay.jsx', name: 'SearchOverlay' },
-  { file: '/src/components/AccountModal.jsx', name: 'AccountModal' },
+  { file: '/src/pages/LoginPage.jsx', name: 'LoginPage' },
   { file: '/src/components/InfoModal.jsx', name: 'InfoModal' },
   { file: '/src/components/CheckoutModal.jsx', name: 'CheckoutModal' },
   { file: '/src/components/ChatWidget.jsx', name: 'ChatWidget' },

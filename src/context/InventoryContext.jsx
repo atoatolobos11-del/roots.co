@@ -4,6 +4,11 @@ import { useLocalStorage } from '../hooks/useLocalStorage.js'
 
 const InventoryContext = createContext(null)
 const STORAGE_KEY = 'rootco.inventory.v1'
+/**
+ * Set (by the login page) to auto-open the inventory dashboard when the shop
+ * mounts, e.g. right after signing in with the admin demo account.
+ */
+export const OPEN_INVENTORY_FLAG = 'rootco.openInventoryOnLoad'
 
 /**
  * Generates initial realistic inventory records from the base products catalogue.
@@ -59,7 +64,20 @@ const DEFAULT_INVENTORY = createInitialInventory()
 
 export function InventoryProvider({ children }) {
   const [inventory, setInventory] = useLocalStorage(STORAGE_KEY, DEFAULT_INVENTORY)
-  const [isInventoryOpen, setIsInventoryOpen] = useState(false)
+  // Lazy: after the admin demo sign-in on /login we redirect home with a
+  // flag set, so the inventory dashboard is already open on mount.
+  const [isInventoryOpen, setIsInventoryOpen] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      if (window.sessionStorage.getItem(OPEN_INVENTORY_FLAG) === '1') {
+        window.sessionStorage.removeItem(OPEN_INVENTORY_FLAG)
+        return true
+      }
+    } catch {
+      /* session storage unavailable (private mode) — just start closed */
+    }
+    return false
+  })
 
   const openInventory = useCallback(() => setIsInventoryOpen(true), [])
   const closeInventory = useCallback(() => setIsInventoryOpen(false), [])

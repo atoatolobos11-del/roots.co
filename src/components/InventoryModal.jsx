@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   X,
   Package,
@@ -16,6 +16,8 @@ import {
   Trash2,
   Edit2,
   Sparkles,
+  BarChart3,
+  ChevronDown,
 } from 'lucide-react'
 import { useOverlay } from '../hooks/useOverlay.js'
 import { useInventory } from '../context/InventoryContext.jsx'
@@ -56,6 +58,9 @@ export default function InventoryModal() {
   const [isAddFormOpen, setIsAddFormOpen] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
   const [actionNotice, setActionNotice] = useState(null)
+  // Whether the table has scrolled far enough to auto-roll the analytics
+  // section up — it rolls back down automatically back at the top.
+  const [isChartsRolledUp, setIsChartsRolledUp] = useState(false)
 
   useOverlay(isInventoryOpen, panelRef, closeInventory)
 
@@ -133,29 +138,20 @@ export default function InventoryModal() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[76] flex items-end justify-center sm:items-center sm:p-4 lg:p-6',
+        'fixed inset-0 z-[76] flex h-screen w-screen items-end justify-center sm:items-center',
         isInventoryOpen ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       aria-hidden={!isInventoryOpen}
     >
-      {/* Scrim backdrop */}
-      <div
-        onClick={closeInventory}
-        className={cn(
-          'absolute inset-0 bg-ink/60 backdrop-blur-[3px] transition-opacity duration-300 ease-soft',
-          isInventoryOpen ? 'opacity-100' : 'opacity-0',
-        )}
-      />
-
-      {/* Main Panel */}
+      {/* Main Panel — full-screen back-office dashboard */}
       <div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="inventory-title"
         className={cn(
-          'on-dark relative flex h-[92vh] w-full max-w-6xl flex-col overflow-hidden bg-white shadow-2xl',
-          'transition-all duration-300 ease-soft sm:rounded-2xl max-sm:rounded-t-2xl',
+          'on-dark relative flex h-full max-h-full w-full max-w-none flex-col overflow-hidden bg-white shadow-2xl',
+          'transition-all duration-300 ease-soft',
           isInventoryOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-8 scale-[0.98] opacity-0',
         )}
       >
@@ -316,6 +312,13 @@ export default function InventoryModal() {
                 detail={`Est. Cost ${formatPrice(stats.totalCost)}`}
               />
             </div>
+
+            {/* Analytics Charts */}
+            <InventoryCharts
+              inventory={inventory}
+              stats={stats}
+              rolledUpByScroll={isChartsRolledUp}
+            />
 
             {/* Collapsible Add Product Drawer */}
             {isAddFormOpen && (
@@ -573,7 +576,14 @@ export default function InventoryModal() {
             </div>
 
             {/* Inventory Table Container */}
-            <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
+            <div
+              className="min-h-0 flex-1 overflow-y-auto px-6 py-4"
+              onScroll={(event) => {
+                // Roll the analytics section up once the list is scrolled past
+                // the top, and roll it back down when the user returns there.
+                setIsChartsRolledUp(event.currentTarget.scrollTop > 40)
+              }}
+            >
               {filteredInventory.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center text-ash">
                   <Package size={36} strokeWidth={1.2} className="opacity-40" />
@@ -801,5 +811,195 @@ function KpiCard({
       <p className="mt-1 text-lg font-bold tracking-tight text-ink">{value}</p>
       {detail && <p className="mt-0.5 text-[9px] text-ash truncate">{detail}</p>}
     </div>
+  )
+}
+
+/**
+ * Lean SVG analytics built from live inventory state (no chart library needed):
+ * a units-per-category bar chart plus the overall stock-health donut.
+ * Auto-rolls up as the inventory table is scrolled down (giving it more room)
+ * and rolls back down at the top; a manual toggle always stays available.
+ */
+function InventoryCharts({ inventory, stats, rolledUpByScroll = false }) {
+  const [manualOpen, setManualOpen] = useState(true)
+  // Pins the charts open after a manual "Show" while the table is scrolled
+  // down; normal auto-rolling resumes once the user returns to the top.
+  const [pinnedOpen, setPinnedOpen] = useState(false)
+  // Expanding beats the roll-up only via the manual pin; the plain manual
+  // toggle still loses to auto-rolling so scroll keeps its rhythm.
+  const isExpanded = pinnedOpen || (manualOpen && !rolledUpByScroll)
+
+  // Returning to the top clears the pin, restoring regular auto-rolling.
+  useEffect(() => {
+    if (!rolledUpByScroll) setPinnedOpen(false)
+  }, [rolledUpByScroll])
+
+  // Roll up live stock figures per category — works with any category,
+  // including ones added through the "Add Item" form.
+  const byCategory = useMemo(() => {
+    const map = new Map()
+    for (const item of inventory) {
+      const category = item.category || 'Other'
+      const entry = map.get(category) || { category, units: 0, skus: 0 }
+      entry.units += item.stock
+      entry.skus += 1
+      map.set(category, entry)
+    }
+    return [...map.values()].sort((a, b) => b.units - a.units)
+  }, [inventory])
+
+  const maxUnits = Math.max(1, ...byCategory.map((row) => row.units))
+  const totalUnits = byCategory.reduce((sum, row) => sum + row.units, 0)
+
+  // Donut segments mirror the status colours used in the table pills.
+  const segments = [
+    { label: 'In Stock', value: stats.inStockCount, color: '#059669' },
+    { label: 'Low Stock', value: stats.lowStockCount, color: '#D97706' },
+    { label: 'Out of Stock', value: stats.outOfStockCount, color: '#DC2626' },
+  ]
+  const skuTotal = segments.reduce((sum, segment) => sum + segment.value, 0)
+  const radius = 52
+  const circumference = 2 * Math.PI * radius
+  let dashOffset = 0
+
+  return (
+    <section className="border-b border-line bg-white px-6 py-4">
+      <div className="flex items-center justify-between">
+        <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-label text-ink">
+          <BarChart3 size={14} strokeWidth={1.8} />
+          Stock Analytics
+          <span className="rounded-full bg-mist px-2 py-0.5 text-[9px] font-bold text-ash">LIVE</span>
+        </h3>
+        <button
+          type="button"
+          onClick={() => {
+            // Branch on actual visibility, not the flags — after an auto-roll
+            // the charts are shut while manualOpen is still true, so the
+            // "Show Charts" click must land in the pin branch.
+            if (isExpanded) {
+              setManualOpen(false)
+              setPinnedOpen(false)
+            } else {
+              setPinnedOpen(true)
+            }
+          }}
+          className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-label text-ash transition-colors duration-200 hover:text-ink"
+          title={isExpanded ? 'Collapse charts to give the table more room' : 'Show stock analytics'}
+        >
+          <span>{isExpanded ? 'Hide Charts' : 'Show Charts'}</span>
+          <ChevronDown
+            size={13}
+            strokeWidth={2}
+            className={cn('transition-transform duration-300', isExpanded && 'rotate-180')}
+          />
+        </button>
+      </div>
+
+      {/* Rolls open/shut smoothly — driven by table scroll plus the manual pin. */}
+      <div
+        className={cn(
+          'grid transition-[grid-template-rows,opacity] duration-300 ease-soft',
+          isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+        )}
+      >
+        <div className="mt-3 grid min-h-0 grid-cols-1 gap-4 overflow-hidden lg:grid-cols-3">
+          {/* Bar chart: units in stock per category */}
+          <div className="rounded-xl border border-line bg-off/40 p-4 lg:col-span-2">
+            <div className="flex items-baseline justify-between">
+              <p className="text-[10px] font-semibold uppercase tracking-label text-ash">
+                Units in Stock by Category
+              </p>
+              <p className="font-mono text-[10px] text-ash">
+                {totalUnits.toLocaleString()} units &bull; {byCategory.length} categories
+              </p>
+            </div>
+            <div className="mt-3 space-y-2">
+              {byCategory.map((row) => {
+                const pct = Math.round((row.units / maxUnits) * 100)
+                return (
+                  <div
+                    key={row.category}
+                    className="group flex items-center gap-3"
+                    title={`${row.units} units across ${row.skus} SKU${row.skus === 1 ? '' : 's'} (${Math.round((row.units / (totalUnits || 1)) * 100)}% of all stock)`}
+                  >
+                    <span className="w-24 shrink-0 truncate text-[10px] font-semibold uppercase tracking-wideish text-ink sm:w-32">
+                      {row.category}
+                    </span>
+                    <div className="h-5 flex-1 overflow-hidden rounded bg-mist/70">
+                      <div
+                        className="h-full rounded bg-ink/80 transition-[width] duration-500 ease-soft group-hover:bg-accent"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="w-16 shrink-0 text-right font-mono text-xs font-semibold text-ink">
+                      {row.units.toLocaleString()}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Donut chart: SKU stock health split */}
+          <div className="rounded-xl border border-line bg-off/40 p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-label text-ash">Stock Health</p>
+            <div className="mt-3 flex flex-wrap items-center gap-4">
+              <svg viewBox="0 0 140 140" className="h-32 w-32 shrink-0" role="img" aria-label="Stock health breakdown">
+                <circle cx="70" cy="70" r={radius} fill="none" stroke="#EDE7DC" strokeWidth="18" />
+                {skuTotal > 0 &&
+                  segments
+                    .filter((segment) => segment.value > 0)
+                    .map((segment) => {
+                      const length = (segment.value / skuTotal) * circumference
+                      const offset = dashOffset
+                      dashOffset += length
+                      return (
+                        <circle
+                          key={segment.label}
+                          cx="70"
+                          cy="70"
+                          r={radius}
+                          fill="none"
+                          stroke={segment.color}
+                          strokeWidth="18"
+                          strokeDasharray={`${length} ${circumference - length}`}
+                          strokeDashoffset={-offset}
+                          transform="rotate(-90 70 70)"
+                        >
+                          <title>{`${segment.label}: ${segment.value} of ${skuTotal} SKUs`}</title>
+                        </circle>
+                      )
+                    })}
+                <text x="70" y="67" textAnchor="middle" className="fill-ink" fontSize="20" fontWeight="700">
+                  {skuTotal}
+                </text>
+                <text x="70" y="83" textAnchor="middle" className="fill-ash" fontSize="9" letterSpacing="1.5">
+                  SKUS
+                </text>
+              </svg>
+              <ul className="min-w-[120px] flex-1 space-y-1.5">
+                {segments.map((segment) => (
+                  <li key={segment.label} className="flex items-center justify-between gap-2 text-[11px]">
+                    <span className="flex items-center gap-2 text-ash">
+                      <span
+                        className="inline-block h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: segment.color }}
+                      />
+                      {segment.label}
+                    </span>
+                    <span className="font-mono font-semibold text-ink">
+                      {segment.value}
+                      {skuTotal > 0 && (
+                        <span className="font-normal text-ash"> &middot; {Math.round((segment.value / skuTotal) * 100)}%</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }

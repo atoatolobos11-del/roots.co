@@ -17,7 +17,6 @@ import InventoryModal from '../components/InventoryModal.jsx'
 import { CartProvider } from '../context/CartContext.jsx'
 import { WishlistProvider } from '../context/WishlistContext.jsx'
 import { ShopProvider } from '../context/ShopContext.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
 import { InventoryProvider } from '../context/InventoryContext.jsx'
 import { InfoProvider } from '../context/InfoContext.jsx'
 import { CheckoutProvider } from '../context/CheckoutContext.jsx'
@@ -26,11 +25,12 @@ import { CheckoutProvider } from '../context/CheckoutContext.jsx'
  * Homepage composition, following the reference hierarchy in PRD §3:
  * announcement → header → hero → benefits → categories → new arrivals →
  * promos → collections → editorial band → dark footer.
+ *
+ * AuthProvider is mounted in App.jsx (shared with the /login page).
  */
 export default function Home() {
   return (
-    <AuthProvider>
-      <InventoryProvider>
+    <InventoryProvider>
         <WishlistProvider>
           <CartProvider>
             <ShopProvider>
@@ -70,6 +70,5 @@ export default function Home() {
           </CartProvider>
         </WishlistProvider>
       </InventoryProvider>
-    </AuthProvider>
-  )
+    )
 }

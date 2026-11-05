@@ -3,8 +3,8 @@ import { Menu, Search, ShoppingBag, User, Heart, Boxes } from 'lucide-react'
 import Wordmark from './Wordmark.jsx'
 import MobileMenu from './MobileMenu.jsx'
 import SearchOverlay from './SearchOverlay.jsx'
-import AccountModal from './AccountModal.jsx'
 import { navLinks } from '../data/site.js'
+import { navigate, LOGIN } from '../routes.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useWishlist } from '../context/WishlistContext.jsx'
 import { useShop } from '../context/ShopContext.jsx'
@@ -15,7 +15,6 @@ import { cn } from '../lib/utils.js'
 /** Sticky main navigation (PRD §4.2). */
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isAccountOpen, setIsAccountOpen] = useState(false)
   const { count, openCart } = useCart()
   const wishlist = useWishlist()
   const { applyFilter, openSearch, isSearchOpen, activeFilter } = useShop()
@@ -108,7 +107,7 @@ export default function Header() {
               <IconButton
                 label={user ? `Account, signed in as ${user.email}` : 'Sign in or create an account'}
                 className="hidden md:inline-flex"
-                onClick={() => setIsAccountOpen(true)}
+                onClick={() => navigate(LOGIN)}
               >
                 <User size={18} strokeWidth={1.5} className={cn(user && 'fill-ink')} />
                 {user && <Count>•</Count>}
@@ -138,7 +137,7 @@ export default function Header() {
         onNavigate={goTo}
         onOpenAccount={() => {
           setIsMenuOpen(false)
-          setIsAccountOpen(true)
+          navigate(LOGIN)
         }}
         onOpenInventory={() => {
           setIsMenuOpen(false)
@@ -146,14 +145,6 @@ export default function Header() {
         }}
       />
       <SearchOverlay open={isSearchOpen} />
-      <AccountModal
-        open={isAccountOpen}
-        onClose={() => setIsAccountOpen(false)}
-        onOpenInventory={() => {
-          setIsAccountOpen(false)
-          openInventory()
-        }}
-      />
     </>
   )
 }
