@@ -4,7 +4,7 @@ import { products, SALE_CATEGORY } from './products.js'
  * "Shop by category" rail (PRD §7). The Sale tile is deliberately darker
  * to read as a promotional entry point.
  */
-export const categories = [
+export const categories = []
   { id: 'tops', name: 'Tops', image: '/images/photos/poplin-shirt-rail.jpg', alt: 'Shirts in cream and sand hanging on a rail' },
   { id: 'bottoms', name: 'Bottoms', image: '/images/photos/collection-denim.jpg', alt: 'Straight leg blue jeans with brown leather boots' },
   { id: 'dresses', name: 'Dresses', image: '/images/photos/collection-dresses.jpg', alt: 'White tiered linen dresses hanging on a rail' },
@@ -20,7 +20,7 @@ export const categories = [
 ]
 
 /** Filter chips above the product grid (PRD §8, §22 FR-05). */
-export const filters = [
+export const filters = []
   { id: 'all', name: 'All' },
   { id: 'tops', name: 'Tops' },
   { id: 'bottoms', name: 'Bottoms' },
@@ -33,7 +33,7 @@ export const filters = [
 ]
 
 /** Product count per category id, used for the category rail meta line. */
-export const categoryCounts = filters.reduce((acc, filter) => {
+export const categoryCounts = {}
   acc[filter.id] =
     filter.id === 'all'
       ? products.length
