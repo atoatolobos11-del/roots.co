@@ -31,7 +31,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div className="shell">
-          <div className="grid h-14 grid-cols-[1fr_auto] items-center gap-4 lg:h-16 lg:grid-cols-3">
+          <div className="grid h-14 grid-cols-[1fr_auto] items-center gap-4 lg:h-16 lg:grid-cols-2">
             {/* Left — wordmark (+ hamburger on mobile) */}
             <div className="flex items-center gap-1">
               <button
@@ -55,31 +55,6 @@ export default function Header() {
                 <Wordmark />
               </a>
             </div>
-
-            {/* Center — desktop navigation */}
-            <nav aria-label="Main" className="hidden lg:flex lg:items-center lg:justify-center lg:gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(event) => goTo(event, link)}
-                  aria-current={activeFilter === link.filter ? 'true' : undefined}
-                  className={cn(
-                    'relative py-2 text-[11px] font-medium uppercase tracking-label transition-colors duration-200',
-                    link.accent ? 'text-accent' : 'text-ink hover:text-ash',
-                  )}
-                >
-                  {link.label}
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      'absolute inset-x-0 -bottom-0.5 h-px origin-left bg-ink transition-transform duration-300 ease-soft',
-                      activeFilter === link.filter ? 'scale-x-100' : 'scale-x-0',
-                    )}
-                  />
-                </a>
-              ))}
-            </nav>
 
             {/* Right — utilities */}
             <div className="flex items-center justify-end gap-1 sm:gap-1.5">
