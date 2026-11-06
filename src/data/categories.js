@@ -1,13 +1,13 @@
 export const categories = [
   {
-    id: 'new-in',
-    name: 'New In',
+    id: 'gray',
+    name: 'Gray',
     image: '/images/products/2.jpg',
     alt: 'Gray ROOTS logo T-shirt',
   },
   {
-    id: 'signature',
-    name: 'Signature',
+    id: 'red',
+    name: 'Red',
     image: '/images/products/3.jpg',
     alt: 'Red ROOTS logo T-shirt',
   },
@@ -40,10 +40,10 @@ export const categories = [
 export const filters = categories.map(({ id, name }) => ({ id, name }))
 
 export const categoryCounts = {
-  'new-in': 6,
-  signature: 6,
-  black: 6,
-  blue: 6,
-  green: 6,
-  nature: 6,
+  gray: 1,
+  red: 1,
+  black: 1,
+  blue: 1,
+  green: 1,
+  nature: 1,
 }

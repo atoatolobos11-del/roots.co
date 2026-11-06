@@ -50,18 +50,22 @@ export function ShopProvider({ children }) {
   const clearQuery = useCallback(() => setQuery(''), [])
 
   const filteredProducts = useMemo(() => {
-    return shopProducts.filter((product) => {
-      const normalizedCategory = product.category.toLowerCase()
-      const demoCategoryFilters = ['new-in', 'signature', 'black', 'blue', 'green', 'nature']
+    const productCategoryMap = {
+      1: 'gray',
+      2: 'red',
+      3: 'black',
+      4: 'blue',
+      5: 'green',
+      6: 'nature',
+    }
 
+    return shopProducts.filter((product) => {
       const matchesCategory =
         activeFilter === 'all'
           ? true
           : activeFilter === 'sale'
             ? Boolean(product.originalPrice)
-            : demoCategoryFilters.includes(activeFilter)
-              ? true
-              : normalizedCategory === activeFilter
+            : productCategoryMap[product.id] === activeFilter
 
       return matchesCategory && matchesQuery(product, query)
     })
