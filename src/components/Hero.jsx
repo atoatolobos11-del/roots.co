@@ -38,26 +38,6 @@ export default function Hero() {
         className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink/25 to-transparent md:hidden"
       />
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] items-center justify-center lg:flex">
-        <div className="relative w-[26rem] max-w-[32vw]">
-          <div className="absolute -left-10 top-10 w-44 rotate-[-12deg] overflow-hidden rounded-[1.5rem] border border-white/40 bg-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm">
-            <img
-              src="/images/photos/rose-ribbed-knit.jpg"
-              alt="Rose ribbed knit fabric pattern"
-              className="h-52 w-full object-cover"
-            />
-          </div>
-
-          <div className="ml-auto overflow-hidden rounded-[2rem] border border-white/25 bg-white/10 p-2 shadow-[0_30px_80px_rgba(0,0,0,0.28)] backdrop-blur-sm">
-            <img
-              src="/images/photos/structured-leather-tote.jpg"
-              alt="Structured black leather tote"
-              className="h-[27rem] w-full rounded-[1.5rem] object-cover"
-            />
-          </div>
-        </div>
-      </div>
-
       <div className="relative shell flex min-h-[78svh] items-center py-16 sm:min-h-[84svh] md:py-24 lg:min-h-[86svh]">
         <div className="max-w-lg animate-fade-up sm:max-w-xl">
           <p className="label-dark">Trendy pieces. Timeless style.</p>
