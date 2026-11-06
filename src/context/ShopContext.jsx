@@ -51,12 +51,18 @@ export function ShopProvider({ children }) {
 
   const filteredProducts = useMemo(() => {
     return shopProducts.filter((product) => {
+      const normalizedCategory = product.category.toLowerCase()
+      const demoCategoryFilters = ['new-in', 'signature', 'black', 'blue', 'green', 'nature']
+
       const matchesCategory =
         activeFilter === 'all'
           ? true
           : activeFilter === 'sale'
             ? Boolean(product.originalPrice)
-            : product.category.toLowerCase() === activeFilter
+            : demoCategoryFilters.includes(activeFilter)
+              ? true
+              : normalizedCategory === activeFilter
+
       return matchesCategory && matchesQuery(product, query)
     })
   }, [activeFilter, query, shopProducts])
