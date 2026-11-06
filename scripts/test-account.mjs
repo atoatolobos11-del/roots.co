@@ -17,12 +17,13 @@ const server = await createServer({
   logLevel: 'error',
 })
 
-const [modal, auth] = await Promise.all([
+const [modal, auth, loginPage] = await Promise.all([
   server.ssrLoadModule('/src/components/AccountModal.jsx'),
   server.ssrLoadModule('/src/context/AuthContext.jsx'),
+  server.ssrLoadModule('/src/pages/LoginPage.jsx'),
 ])
 
-const { AuthProvider, authRules } = auth
+const { AuthProvider, authRules, resolveDemoRole, isReservedAdminEmail, DEMO_ACCOUNTS } = auth
 
 let failed = 0
 const check = (label, ok, detail = '') => {
@@ -52,6 +53,8 @@ check('decorative shapes hidden from AT', (html.match(/aria-hidden="true"/g) ?? 
 check('heading is not empty', /id="account-title"[^>]*>[^<]+/.test(html))
 check('no password value echoed into the DOM', !/<input[^>]*type="password"[^>]*value="[^"]+"/.test(html))
 check('valid fields are not marked invalid', !html.includes('aria-invalid="true"'))
+check('account dialog has no customer-to-admin promotion control', !html.includes('Switch to Administrator Role'))
+check('account dialog has no one-click admin sign-in', !html.includes('Admin Account'))
 
 // Every input must have a real <label for>. Note the \s: a bare id=" would also
 // match the tail of aria-invalid="..." and silently pass the wrong value.
@@ -76,6 +79,18 @@ check('confirm detects mismatch', r.confirmPassword.validate('abcd1235', { passw
 check('confirm accepts a match', r.confirmPassword.validate('abcd1234', { password: 'abcd1234' }) === null)
 check('name rejects one character', Boolean(r.name.validate('a')))
 check('name accepts a normal name', r.name.validate('Ada Lovelace') === null, 'Ada Lovelace')
+
+console.log('\nRole Assignment:')
+check('admin-like customer email remains customer', resolveDemoRole('shopper-admin@example.com', 'anything') === 'customer')
+check('incorrect admin password grants no role', resolveDemoRole(DEMO_ACCOUNTS.admin.email, 'wrong-password') === null)
+check('only configured admin credentials receive admin role', resolveDemoRole(DEMO_ACCOUNTS.admin.email, DEMO_ACCOUNTS.admin.password) === 'admin')
+check('administrator account email is reserved from registration', isReservedAdminEmail(DEMO_ACCOUNTS.admin.email))
+
+const loginMarkup = renderToStaticMarkup(
+  createElement(AuthProvider, null, createElement(loginPage.default)),
+)
+check('login page exposes no customer role-promotion control', !loginMarkup.includes('Switch to Administrator Role'))
+check('login page exposes no one-click admin sign-in', !loginMarkup.includes('Admin Account'))
 
 console.log('\nAuthContext:')
 const ssr = renderToStaticMarkup(createElement(AuthProvider, null, createElement('span', null, 'ok')))

@@ -50,7 +50,7 @@ export default function InventoryModal() {
     resetInventory,
     stats,
   } = useInventory()
-  const { isAdmin, signInAsDemo } = useAuth()
+  const { isAdmin } = useAuth()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all') // all | instock | low | out
@@ -173,17 +173,6 @@ export default function InventoryModal() {
               The inventory management system is strictly confidential and reserved for store administrators. Regular customers browsing the shop cannot access stock controls.
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={async () => {
-                  await signInAsDemo('admin')
-                  showNotice('Authenticated as Store Administrator')
-                }}
-                className="btn-dark flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-label"
-              >
-                <ShieldCheck size={16} strokeWidth={1.8} />
-                Sign in as Admin (Demo)
-              </button>
               <button
                 type="button"
                 onClick={closeInventory}

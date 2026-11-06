@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { products } from '../data/products.js'
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
+import { useAuth } from './AuthContext.jsx'
 
 const InventoryContext = createContext(null)
 const STORAGE_KEY = 'rootco.inventory.v1'
@@ -64,22 +65,27 @@ const DEFAULT_INVENTORY = createInitialInventory()
 
 export function InventoryProvider({ children }) {
   const [inventory, setInventory] = useLocalStorage(STORAGE_KEY, DEFAULT_INVENTORY)
-  // Lazy: after the admin demo sign-in on /login we redirect home with a
-  // flag set, so the inventory dashboard is already open on mount.
-  const [isInventoryOpen, setIsInventoryOpen] = useState(() => {
-    if (typeof window === 'undefined') return false
-    try {
-      if (window.sessionStorage.getItem(OPEN_INVENTORY_FLAG) === '1') {
-        window.sessionStorage.removeItem(OPEN_INVENTORY_FLAG)
-        return true
-      }
-    } catch {
-      /* session storage unavailable (private mode) — just start closed */
-    }
-    return false
-  })
+  const { isAdmin, isReady } = useAuth()
+  const [isInventoryOpen, setIsInventoryOpen] = useState(false)
 
-  const openInventory = useCallback(() => setIsInventoryOpen(true), [])
+  useEffect(() => {
+    if (!isReady) return
+    try {
+      const shouldOpen = window.sessionStorage.getItem(OPEN_INVENTORY_FLAG) === '1'
+      window.sessionStorage.removeItem(OPEN_INVENTORY_FLAG)
+      if (shouldOpen && isAdmin) setIsInventoryOpen(true)
+    } catch {
+      /* session storage unavailable — keep the dashboard closed */
+    }
+  }, [isAdmin, isReady])
+
+  useEffect(() => {
+    if (!isAdmin) setIsInventoryOpen(false)
+  }, [isAdmin])
+
+  const openInventory = useCallback(() => {
+    if (isAdmin) setIsInventoryOpen(true)
+  }, [isAdmin])
   const closeInventory = useCallback(() => setIsInventoryOpen(false), [])
 
   const safeInventory = Array.isArray(inventory)
@@ -120,6 +126,7 @@ export function InventoryProvider({ children }) {
 
   const updateStock = useCallback(
     (id, newStock) => {
+      if (!isAdmin) return
       const validStock = Math.max(0, parseInt(newStock, 10) || 0)
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
@@ -130,11 +137,12 @@ export function InventoryProvider({ children }) {
         )
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const adjustStock = useCallback(
     (id, delta) => {
+      if (!isAdmin) return
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
         return list.map((item) => {
@@ -144,11 +152,12 @@ export function InventoryProvider({ children }) {
         })
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const restockAllLow = useCallback(
     (quantity = 15) => {
+      if (!isAdmin) return
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
         return list.map((item) => {
@@ -163,11 +172,12 @@ export function InventoryProvider({ children }) {
         })
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const updateItem = useCallback(
     (id, updates) => {
+      if (!isAdmin) return
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
         return list.map((item) =>
@@ -177,11 +187,12 @@ export function InventoryProvider({ children }) {
         )
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const addItem = useCallback(
     (newItem) => {
+      if (!isAdmin) return
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
         const nextId = list.length > 0 ? Math.max(...list.map((i) => i.id)) + 1 : 1
@@ -204,22 +215,23 @@ export function InventoryProvider({ children }) {
         return [item, ...list]
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const deleteItem = useCallback(
     (id) => {
+      if (!isAdmin) return
       setInventory((current) => {
         const list = Array.isArray(current) ? current : DEFAULT_INVENTORY
         return list.filter((item) => item.id !== id)
       })
     },
-    [setInventory],
+    [isAdmin, setInventory],
   )
 
   const resetInventory = useCallback(() => {
-    setInventory(createInitialInventory())
-  }, [setInventory])
+    if (isAdmin) setInventory(createInitialInventory())
+  }, [isAdmin, setInventory])
 
   const decrementStock = useCallback(
     (cartItems) => {

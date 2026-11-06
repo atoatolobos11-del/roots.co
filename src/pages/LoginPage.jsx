@@ -160,20 +160,7 @@ function AuthForm() {
   }
 
   const handleDemoCustomer = async () => {
-    await signInAsDemo('customer')
-    navigate(HOME)
-  }
-
-  const handleDemoAdmin = async () => {
-    const session = await signInAsDemo('admin')
-    // Drop the administrator straight into the inventory dashboard.
-    if (session?.role === 'admin') {
-      try {
-        window.sessionStorage.setItem(OPEN_INVENTORY_FLAG, '1')
-      } catch {
-        /* private mode — sign-in still works, just no auto-open */
-      }
-    }
+    await signInAsDemo()
     navigate(HOME)
   }
 
@@ -253,8 +240,7 @@ function AuthForm() {
 
         {isSignUp && (
           <p className="text-[11px] leading-relaxed text-ash">
-            At least 8 characters, including a letter and a number. Include &ldquo;admin&rdquo; in the email to get
-            administrator access.
+            At least 8 characters, including a letter and a number. New accounts receive customer access.
           </p>
         )}
 
@@ -293,24 +279,14 @@ function AuthForm() {
           <p className="text-center text-[10px] font-semibold uppercase tracking-label text-ash">
             One-Click Demo Accounts
           </p>
-          <div className="mt-2 grid grid-cols-2 gap-2">
+          <div className="mt-2 grid grid-cols-1 gap-2">
             <button
               type="button"
               onClick={handleDemoCustomer}
               className="flex flex-col items-center justify-center rounded-lg border border-line bg-off/40 p-2 text-center transition-colors duration-200 hover:border-ink hover:bg-off"
             >
               <span className="text-[11px] font-semibold text-ink">Customer Account</span>
-              <span className="text-[9px] text-ash">Regular shopper (no inventory)</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleDemoAdmin}
-              className="flex flex-col items-center justify-center rounded-lg border border-ink bg-ink p-2 text-center text-white transition-colors duration-200 hover:bg-neutral-800"
-            >
-              <span className="flex items-center gap-1 text-[11px] font-semibold text-white">
-                <ShieldCheck size={12} strokeWidth={2} /> Admin Account
-              </span>
-              <span className="text-[9px] text-white/70">Opens the inventory dashboard</span>
+              <span className="text-[9px] text-ash">Shop access only</span>
             </button>
           </div>
         </div>
@@ -324,7 +300,7 @@ function AuthForm() {
 }
 
 function AccountProfile({ user }) {
-  const { isAdmin, signOut, toggleRole } = useAuth()
+  const { isAdmin, signOut } = useAuth()
 
   const openInventoryDashboard = () => {
     try {
@@ -386,7 +362,7 @@ function AccountProfile({ user }) {
         </div>
       </dl>
 
-      {isAdmin ? (
+      {isAdmin && (
         <div className="mt-4">
           <button
             type="button"
@@ -395,17 +371,6 @@ function AccountProfile({ user }) {
           >
             <Boxes size={15} strokeWidth={1.8} />
             Open Inventory System
-          </button>
-        </div>
-      ) : (
-        <div className="mt-4 rounded-xl border border-line bg-mist/30 p-3 text-left">
-          <p className="text-[11px] text-ash">Need inventory access? Switch this account to Administrator:</p>
-          <button
-            type="button"
-            onClick={toggleRole}
-            className="mt-2 w-full rounded-md border border-ink bg-white py-1.5 text-xs font-semibold uppercase tracking-label text-ink transition-colors duration-200 hover:bg-ink hover:text-white"
-          >
-            Switch to Administrator Role
           </button>
         </div>
       )}
@@ -462,7 +427,9 @@ function Field({ name, type, value, error, onChange, autoComplete, trailing, sty
             error ? 'border-accent' : 'border-line',
           )}
         />
-        {trailing && <span className="absolute right-3 top-1/2 -translate-y-1/2">{trailing}</span>}
+        {trailing && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2">{trailing}</span>
+        )}
       </div>
       {error && (
         <p id={errorId} role="alert" className="mt-1.5 text-[11px] text-accent">

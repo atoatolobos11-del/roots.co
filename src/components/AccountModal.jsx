@@ -223,7 +223,7 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
 
               {isSignUp && (
                 <p className="text-[11px] leading-relaxed text-ash">
-                  At least 8 characters, including a letter and a number. Include "admin" in email to get administrator access.
+                  At least 8 characters, including a letter and a number. New accounts receive customer access.
                 </p>
               )}
 
@@ -262,31 +262,17 @@ export default function AccountModal({ open, onClose, onOpenInventory }) {
                 <p className="text-center text-[10px] font-semibold uppercase tracking-label text-ash">
                   One-Click Demo Accounts
                 </p>
-                <div className="mt-2 grid grid-cols-2 gap-2">
+                <div className="mt-2 grid grid-cols-1 gap-2">
                   <button
                     type="button"
                     onClick={async () => {
-                      await signInAsDemo('customer')
+                      await signInAsDemo()
                       onClose()
                     }}
                     className="flex flex-col items-center justify-center rounded-lg border border-line bg-off/40 p-2 text-center transition-colors duration-200 hover:bg-off hover:border-ink"
                   >
                     <span className="text-[11px] font-semibold text-ink">Customer Account</span>
-                    <span className="text-[9px] text-ash">Regular shopper (no inventory)</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await signInAsDemo('admin')
-                      onClose()
-                      if (onOpenInventory) onOpenInventory()
-                    }}
-                    className="flex flex-col items-center justify-center rounded-lg border border-ink bg-ink p-2 text-center text-white transition-colors duration-200 hover:bg-neutral-800"
-                  >
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-white">
-                      <ShieldCheck size={12} strokeWidth={2} /> Admin Account
-                    </span>
-                    <span className="text-[9px] text-white/70">Click to open inventory</span>
+                    <span className="text-[9px] text-ash">Shop access only</span>
                   </button>
                 </div>
               </div>
@@ -356,7 +342,7 @@ function Field({
 }
 
 function SignedIn({ user, onClose, onSignOut, onOpenInventory }) {
-  const { isAdmin, toggleRole } = useAuth()
+  const { isAdmin } = useAuth()
 
   return (
     <div className="px-6 py-8 text-center">
@@ -424,34 +410,7 @@ function SignedIn({ user, onClose, onSignOut, onOpenInventory }) {
             Open Inventory System
           </button>
         </div>
-      ) : (
-        <div className="mt-4 rounded-xl border border-line bg-mist/30 p-3 text-left">
-          <p className="text-[11px] text-ash">
-            Need inventory access? Switch this account to Administrator:
-          </p>
-          <button
-            type="button"
-            onClick={toggleRole}
-            className="mt-2 w-full rounded-md border border-ink bg-white py-1.5 text-xs font-semibold uppercase tracking-label text-ink hover:bg-ink hover:text-white transition-colors duration-200"
-          >
-            Switch to Administrator Role
-          </button>
-        </div>
-      )}
-
-      {/* Role Toggle Switcher */}
-      {isAdmin && (
-        <div className="mt-3 flex items-center justify-center gap-2 text-[10px] text-ash">
-          <span>Viewing as Admin &bull;</span>
-          <button
-            type="button"
-            onClick={toggleRole}
-            className="font-semibold text-ink underline underline-offset-2 hover:text-accent"
-          >
-            Switch to Customer View
-          </button>
-        </div>
-      )}
+      ) : null}
 
       <div className="mt-5 flex flex-col gap-2 sm:flex-row">
         <button type="button" onClick={onClose} className="btn-dark flex-1">

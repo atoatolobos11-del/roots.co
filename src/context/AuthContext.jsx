@@ -20,21 +20,31 @@ export const DEMO_ACCOUNTS = {
 }
 
 /**
- * Client-only demo session with role-based access control.
+ * Client-only demo session with UI-level role checks. Production authorization
+ * must be enforced by a trusted server, not browser storage or client code.
  */
 function readStoredSession() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw)
-    // Migrate old sessions without role
-    if (parsed && !parsed.role) {
-      parsed.role = parsed.email?.toLowerCase().includes('admin') ? 'admin' : 'customer'
-    }
-    return parsed
+    if (!parsed || typeof parsed.email !== 'string') return null
+    const isKnownAdmin =
+      parsed.email.toLowerCase() === DEMO_ACCOUNTS.admin.email && parsed.role === 'admin'
+    return { ...parsed, role: isKnownAdmin ? 'admin' : 'customer' }
   } catch {
     return null
   }
+}
+
+export function resolveDemoRole(email, password) {
+  const emailClean = email.trim().toLowerCase()
+  if (emailClean !== DEMO_ACCOUNTS.admin.email) return 'customer'
+  return password === DEMO_ACCOUNTS.admin.password ? 'admin' : null
+}
+
+export function isReservedAdminEmail(email) {
+  return email.trim().toLowerCase() === DEMO_ACCOUNTS.admin.email
 }
 
 function fakeHash(value) {
@@ -74,13 +84,15 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signUp = useCallback(
-    async ({ name, email, role }) => {
+    async ({ name, email }) => {
       const emailClean = email.trim().toLowerCase()
-      const assignedRole = role || (emailClean.includes('admin') ? 'admin' : 'customer')
+      if (isReservedAdminEmail(emailClean)) {
+        throw new Error('This email is reserved for the administrator account')
+      }
       const session = {
         name: name.trim(),
         email: emailClean,
-        role: assignedRole,
+        role: 'customer',
         joinedAt: new Date().toISOString(),
       }
       persist(session)
@@ -90,17 +102,15 @@ export function AuthProvider({ children }) {
   )
 
   const signIn = useCallback(
-    async ({ email, role }) => {
+    async ({ email, password }) => {
       const emailClean = email.trim().toLowerCase()
-      const assignedRole = role || (emailClean.includes('admin') ? 'admin' : 'customer')
+      const assignedRole = resolveDemoRole(emailClean, password)
+      if (!assignedRole) throw new Error('Invalid administrator credentials')
       const local = emailClean.split('@')[0].replace(/[._-]+/g, ' ')
-      const name =
-        assignedRole === 'admin' && !local.includes(' ')
-          ? 'Admin ROOTS.CO'
-          : local.replace(/\b\w/g, (c) => c.toUpperCase())
+      const name = assignedRole === 'admin' ? DEMO_ACCOUNTS.admin.name : local.replace(/\b\w/g, (c) => c.toUpperCase())
 
       const session = {
-        name: name || (assignedRole === 'admin' ? 'Admin' : 'Member'),
+        name: name || 'Member',
         email: emailClean,
         role: assignedRole,
         joinedAt: new Date().toISOString(),
@@ -112,8 +122,8 @@ export function AuthProvider({ children }) {
   )
 
   const signInAsDemo = useCallback(
-    async (role = 'admin') => {
-      const account = DEMO_ACCOUNTS[role] || DEMO_ACCOUNTS.customer
+    async () => {
+      const account = DEMO_ACCOUNTS.customer
       const session = {
         name: account.name,
         email: account.email,
@@ -126,13 +136,6 @@ export function AuthProvider({ children }) {
     [persist],
   )
 
-  const toggleRole = useCallback(() => {
-    if (!user) return
-    const nextRole = user.role === 'admin' ? 'customer' : 'admin'
-    const updated = { ...user, role: nextRole }
-    persist(updated)
-  }, [user, persist])
-
   const signOut = useCallback(() => {
     setUser(null)
     try {
@@ -142,7 +145,11 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  const isAdmin = Boolean(user && user.role === 'admin')
+  const isAdmin = Boolean(
+    user &&
+      user.role === 'admin' &&
+      user.email?.toLowerCase() === DEMO_ACCOUNTS.admin.email,
+  )
 
   const value = useMemo(
     () => ({
@@ -153,10 +160,9 @@ export function AuthProvider({ children }) {
       signUp,
       signIn,
       signInAsDemo,
-      toggleRole,
       signOut,
     }),
-    [user, isAdmin, isReady, signUp, signIn, signInAsDemo, toggleRole, signOut],
+    [user, isAdmin, isReady, signUp, signIn, signInAsDemo, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

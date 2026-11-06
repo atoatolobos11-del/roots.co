@@ -114,6 +114,10 @@ check(
   lockedModalMarkup.includes('Administrator Access Required')
 )
 check(
+  'Does not offer a one-click admin sign-in inside inventory',
+  !lockedModalMarkup.includes('Sign in as Admin (Demo)')
+)
+check(
   'Does not render inventory controls/table to unauthorized user',
   !lockedModalMarkup.includes('Total Valuation')
 )
