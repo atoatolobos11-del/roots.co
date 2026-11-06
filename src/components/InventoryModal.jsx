@@ -138,7 +138,7 @@ export default function InventoryModal() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[76] flex h-screen w-screen items-end justify-center sm:items-center',
+        'fixed inset-0 z-[76] flex h-dvh w-screen items-end justify-center sm:items-center',
         isInventoryOpen ? 'pointer-events-auto' : 'pointer-events-none',
       )}
       aria-hidden={!isInventoryOpen}
@@ -149,8 +149,13 @@ export default function InventoryModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="inventory-title"
+        onScroll={(event) => {
+          if (window.innerWidth < 640) {
+            setIsChartsRolledUp(event.currentTarget.scrollTop > 40)
+          }
+        }}
         className={cn(
-          'on-dark relative flex h-full max-h-full w-full max-w-none flex-col overflow-hidden bg-white shadow-2xl',
+          'on-dark relative flex h-full min-h-0 max-h-full w-full max-w-none flex-col touch-pan-y overflow-y-auto overscroll-y-contain bg-white shadow-2xl [-webkit-overflow-scrolling:touch] sm:overflow-hidden',
           'transition-all duration-300 ease-soft',
           isInventoryOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-8 scale-[0.98] opacity-0',
         )}
@@ -191,7 +196,7 @@ export default function InventoryModal() {
         ) : (
           <>
             {/* Header */}
-            <header className="border-b border-line bg-mist/40 px-6 py-4.5">
+            <header className="sticky top-0 z-20 shrink-0 border-b border-line bg-mist/95 px-6 py-4.5 backdrop-blur sm:static sm:shrink">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-white">
@@ -266,7 +271,7 @@ export default function InventoryModal() {
             </header>
 
             {/* KPI Summary Cards */}
-            <div className="grid grid-cols-2 border-b border-line bg-white px-6 py-3.5 sm:grid-cols-3 lg:grid-cols-6 lg:gap-4 gap-3 text-left">
+            <div className="grid shrink-0 grid-cols-2 border-b border-line bg-white px-6 py-3.5 sm:shrink sm:grid-cols-3 lg:grid-cols-6 lg:gap-4 gap-3 text-left">
               <KpiCard
                 label="Total SKUs"
                 value={stats.totalSkus}
@@ -322,7 +327,7 @@ export default function InventoryModal() {
 
             {/* Collapsible Add Product Drawer */}
             {isAddFormOpen && (
-              <div className="border-b border-line bg-mist/60 px-6 py-4 animate-rise">
+              <div className="shrink-0 border-b border-line bg-mist/60 px-6 py-4 animate-rise sm:shrink">
                 <div className="flex items-center justify-between pb-3">
                   <h3 className="text-xs font-semibold uppercase tracking-label text-ink">
                     Add New Product to Warehouse Inventory
@@ -414,7 +419,7 @@ export default function InventoryModal() {
 
             {/* Editing Modal / Drawer */}
             {editingItem && (
-              <div className="border-b border-line bg-off/80 px-6 py-4 animate-rise">
+              <div className="shrink-0 border-b border-line bg-off/80 px-6 py-4 animate-rise sm:shrink">
                 <div className="flex items-center justify-between pb-2">
                   <h3 className="text-xs font-semibold uppercase tracking-label text-ink">
                     Edit Inventory Record: {editingItem.name} ({editingItem.sku})
@@ -494,7 +499,7 @@ export default function InventoryModal() {
             )}
 
             {/* Filter & Search Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-mist/20 px-6 py-3">
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-line bg-mist/20 px-6 py-3 sm:shrink">
               {/* Left: Search input */}
               <div className="relative w-full max-w-xs">
                 <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ash">
@@ -577,7 +582,7 @@ export default function InventoryModal() {
 
             {/* Inventory Table Container */}
             <div
-              className="min-h-0 flex-1 overflow-y-auto px-6 py-4"
+              className="min-h-0 flex-none overflow-visible px-4 py-4 sm:flex-1 sm:touch-pan-y sm:overflow-y-auto sm:overscroll-y-contain sm:px-6 sm:[-webkit-overflow-scrolling:touch]"
               onScroll={(event) => {
                 // Roll the analytics section up once the list is scrolled past
                 // the top, and roll it back down when the user returns there.
@@ -764,7 +769,7 @@ export default function InventoryModal() {
             </div>
 
             {/* Footer */}
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-mist/30 px-6 py-3">
+            <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line bg-mist/30 px-6 py-3 sm:shrink">
               <div className="text-[11px] text-ash">
                 Showing {filteredInventory.length} of {inventory.length} inventory items &bull; Stock changes persist locally in real-time.
               </div>
@@ -821,7 +826,9 @@ function KpiCard({
  * and rolls back down at the top; a manual toggle always stays available.
  */
 function InventoryCharts({ inventory, stats, rolledUpByScroll = false }) {
-  const [manualOpen, setManualOpen] = useState(true)
+  const [manualOpen, setManualOpen] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 640px)').matches,
+  )
   // Pins the charts open after a manual "Show" while the table is scrolled
   // down; normal auto-rolling resumes once the user returns to the top.
   const [pinnedOpen, setPinnedOpen] = useState(false)
@@ -863,7 +870,7 @@ function InventoryCharts({ inventory, stats, rolledUpByScroll = false }) {
   let dashOffset = 0
 
   return (
-    <section className="border-b border-line bg-white px-6 py-4">
+    <section className="shrink-0 border-b border-line bg-white px-6 py-4 sm:shrink">
       <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-label text-ink">
           <BarChart3 size={14} strokeWidth={1.8} />
