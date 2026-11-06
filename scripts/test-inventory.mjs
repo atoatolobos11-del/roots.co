@@ -41,6 +41,15 @@ const check = (label, ok, detail = '') => {
 console.log('Inventory Catalogue Verification:')
 const initial = createInitialInventory()
 check('seeds the current product catalogue into inventory', initial.length === catalog.length)
+check(
+  'inventory names, categories, and images match the shop catalogue',
+  initial.every((item, index) =>
+    item.id === catalog[index].id &&
+    item.name === catalog[index].name &&
+    item.category === catalog[index].category &&
+    item.image === catalog[index].image,
+  ),
+)
 check('SKU format correctly formatted', initial[0].sku.startsWith('RC-'))
 check('tracks cost and stock', typeof initial[0].cost === 'number' && typeof initial[0].stock === 'number')
 check('all catalogue products have estimated prices', catalog.every((product) => Number.isFinite(product.price) && product.price > 0))

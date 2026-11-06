@@ -4,7 +4,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage.js'
 import { useAuth } from './AuthContext.jsx'
 
 const InventoryContext = createContext(null)
-const STORAGE_KEY = 'rootco.inventory.v1'
+const STORAGE_KEY = 'rootco.inventory.v2'
 /**
  * Set (by the login page) to auto-open the inventory dashboard when the shop
  * mounts, e.g. right after signing in with the admin demo account.
