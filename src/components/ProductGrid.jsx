@@ -41,9 +41,11 @@ export default function ProductGrid() {
     )
   }
 
+  const visibleProducts = filteredProducts.slice(0, 6)
+
   return (
     <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 xl:grid-cols-5 lg:gap-x-5 lg:gap-y-10 2xl:grid-cols-6">
-      {filteredProducts.map((product, index) => (
+      {visibleProducts.map((product, index) => (
         <li key={product.id}>
           <ProductCard product={product} priority={index < 2} />
         </li>
