@@ -3,7 +3,6 @@ import Header from '../components/Header.jsx'
 import Hero from '../components/Hero.jsx'
 import BenefitsBar from '../components/BenefitsBar.jsx'
 import CategorySection from '../components/CategorySection.jsx'
-import ProductSection from '../components/ProductSection.jsx'
 import PromoSection from '../components/PromoSection.jsx'
 import CollectionSection from '../components/CollectionSection.jsx'
 import EditorialBand from '../components/EditorialBand.jsx'
@@ -50,7 +49,6 @@ export default function Home() {
                     <Hero />
                     <BenefitsBar />
                     <CategorySection />
-                    <ProductSection />
                     <PromoSection />
                     <CollectionSection />
                     <EditorialBand />
