@@ -53,8 +53,8 @@ export default function EditorialBand() {
 
         <div className="grid grid-cols-5 gap-3 sm:gap-4">
           <img
-            src="/images/photos/collection-dresses.jpg"
-            alt="White tiered linen dresses hanging on a rail"
+            src="/images/photos/roots-collection-arch.jpg"
+            alt="Black ROOTS graphic T-shirt displayed in a weathered stone arch"
             width="1350"
             height="900"
             loading="lazy"
@@ -62,8 +62,8 @@ export default function EditorialBand() {
             className="col-span-3 aspect-[3/4] w-full rounded-xl bg-mist object-cover"
           />
           <img
-            src="/images/photos/collection-knitwear.jpg"
-            alt="Folded grey merino knitwear beside a pair of brown leather shoes"
+            src="/hero/8.jpg"
+            alt="ROOTS graphic T-shirts arranged on a textured stone surface"
             width="1350"
             height="900"
             loading="lazy"

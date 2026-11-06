@@ -1,55 +1,57 @@
 /**
- * Editorial collections rail (PRD §12).
+ * Explore collections rail for the Roots product system.
  *
- * Names and descriptions are written to match the photograph shown on each
- * card, since the photography is sourced rather than art-directed to a brief.
- */
-/**
- * Editorial collections rail (PRD §12).
- *
- * `filter` maps each card onto a category in src/data/categories.js, so
- * clicking a card actually filters the grid rather than only scrolling to it.
- * Every value here must exist in the `filters` list.
+ * This section mirrors the actual six-item catalog rather than an unrelated
+ * editorial fashion taxonomy. Each card filters to one of the real product
+ * categories used by the store.
  */
 export const collections = [
   {
-    id: 'tailoring',
-    name: 'Tailoring',
-    description: 'Checked suiting and pressed creases.',
-    image: '/images/photos/collection-tailoring.jpg',
-    alt: 'Brown checked three-piece suit displayed on a white mannequin',
-    filter: 'tailoring',
+    id: 'gray',
+    name: 'Gray',
+    description: 'Neutral everyday essential.',
+    image: '/images/products/2.jpg',
+    alt: 'Gray ROOTS logo T-shirt',
+    filter: 'gray',
   },
   {
-    id: 'dresses',
-    name: 'Dresses',
-    description: 'Feather-light linen, tiered seams.',
-    image: '/images/photos/collection-dresses.jpg',
-    alt: 'White tiered linen dresses hanging on a rail',
-    filter: 'dresses',
+    id: 'red',
+    name: 'Red',
+    description: 'Bold statement tone.',
+    image: '/images/products/3.jpg',
+    alt: 'Red ROOTS logo T-shirt',
+    filter: 'red',
   },
   {
-    id: 'knitwear',
-    name: 'Knitwear',
-    description: 'Merino in blush and rose.',
-    image: '/images/photos/collection-knitwear.jpg',
-    alt: 'Folded grey merino knitwear beside a pair of brown leather shoes',
-    filter: 'tops',
+    id: 'black',
+    name: 'Black',
+    description: 'Clean and versatile staple.',
+    image: '/images/products/4.jpg',
+    alt: 'Black ROOTS logo T-shirt',
+    filter: 'black',
   },
   {
-    id: 'footwear',
-    name: 'Footwear',
-    description: 'Brogues, derbies and clean white leather.',
-    image: '/images/photos/collection-shoes.jpg',
-    alt: 'Pair of tan leather brogue shoes beside a polka dot shirt',
-    filter: 'shoes',
+    id: 'blue',
+    name: 'Blue',
+    description: 'Strong sportswear energy.',
+    image: '/images/products/6.jpg',
+    alt: 'Royal blue graphic T-shirt',
+    filter: 'blue',
   },
   {
-    id: 'denim',
-    name: 'Denim',
-    description: 'Straight and tapered, rigid selvedge.',
-    image: '/images/photos/collection-denim.jpg',
-    alt: 'Person wearing straight leg blue jeans with brown leather boots',
-    filter: 'bottoms',
+    id: 'green',
+    name: 'Green',
+    description: 'Earthy standout finish.',
+    image: '/images/products/7.jpg',
+    alt: 'Forest green graphic T-shirt',
+    filter: 'green',
+  },
+  {
+    id: 'nature',
+    name: 'Nature',
+    description: 'Soft organic signature.',
+    image: '/images/products/10.jpg',
+    alt: 'White ROOTS nature graphic T-shirt',
+    filter: 'nature',
   },
 ]
